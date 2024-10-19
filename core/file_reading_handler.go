@@ -1,6 +1,6 @@
 package core
 
-import "github.com/mdwhatcott/huguinho/contracts"
+import "github.com/mdw-tools/hugoinho/contracts"
 
 type FileReadingHandler struct {
 	disk contracts.ReadFile

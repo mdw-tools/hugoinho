@@ -1,7 +1,7 @@
 package core
 
 import (
-	"github.com/mdwhatcott/huguinho/contracts"
+	"github.com/mdw-tools/hugoinho/contracts"
 )
 
 type MetadataValidationHandler struct {

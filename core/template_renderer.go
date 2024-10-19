@@ -6,7 +6,7 @@ import (
 	"reflect"
 	"text/template"
 
-	"github.com/mdwhatcott/huguinho/contracts"
+	"github.com/mdw-tools/hugoinho/contracts"
 )
 
 type TemplateRenderer struct {

@@ -5,8 +5,8 @@ import (
 	"os"
 	"time"
 
-	"github.com/mdwhatcott/huguinho/core"
-	"github.com/mdwhatcott/huguinho/io"
+	"github.com/mdw-tools/hugoinho/core"
+	"github.com/mdw-tools/hugoinho/io"
 )
 
 var Version = "dev"

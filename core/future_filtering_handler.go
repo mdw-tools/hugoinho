@@ -4,7 +4,7 @@ import (
 	"fmt"
 	"time"
 
-	"github.com/mdwhatcott/huguinho/contracts"
+	"github.com/mdw-tools/hugoinho/contracts"
 )
 
 type FutureFilteringHandler struct {

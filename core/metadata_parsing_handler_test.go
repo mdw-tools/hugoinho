@@ -3,8 +3,8 @@ package core
 import (
 	"testing"
 
-	"github.com/mdwhatcott/huguinho/contracts"
-	"github.com/mdwhatcott/testing/should"
+	"github.com/mdw-go/testing/should"
+	"github.com/mdw-tools/hugoinho/contracts"
 )
 
 func TestMetadataParserFixture(t *testing.T) {

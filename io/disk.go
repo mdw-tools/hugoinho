@@ -5,7 +5,7 @@ import (
 	"os"
 	"path/filepath"
 
-	"github.com/mdwhatcott/huguinho/contracts"
+	"github.com/mdw-tools/hugoinho/contracts"
 )
 
 type Disk struct{}

@@ -1,8 +1,8 @@
-module github.com/mdwhatcott/huguinho
+module github.com/mdw-tools/hugoinho
 
 go 1.22
 
 require (
-	github.com/mdwhatcott/testing v1.4.2
+	github.com/mdw-go/testing v1.5.0
 	github.com/yuin/goldmark v1.7.4
 )

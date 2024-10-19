@@ -9,7 +9,7 @@ import (
 	"sync"
 	"time"
 
-	"github.com/mdwhatcott/huguinho/contracts"
+	"github.com/mdw-tools/hugoinho/contracts"
 )
 
 type InMemoryFileSystem struct {

@@ -3,7 +3,7 @@ package core
 import (
 	"fmt"
 
-	"github.com/mdwhatcott/huguinho/contracts"
+	"github.com/mdw-tools/hugoinho/contracts"
 )
 
 type DraftFilteringHandler struct {

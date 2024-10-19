@@ -1,7 +1,7 @@
 package core
 
 import (
-	"github.com/mdwhatcott/huguinho/contracts"
+	"github.com/mdw-tools/hugoinho/contracts"
 )
 
 func Listen(in, out chan contracts.Article, handler contracts.Handler) {

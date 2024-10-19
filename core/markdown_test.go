@@ -3,7 +3,7 @@ package core
 import (
 	"testing"
 
-	"github.com/mdwhatcott/testing/should"
+	"github.com/mdw-go/testing/should"
 )
 
 func TestGoldmarkMarkdownConverterFixture(t *testing.T) {
