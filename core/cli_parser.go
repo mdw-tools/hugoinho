@@ -17,7 +17,7 @@ type CLIParser struct {
 }
 
 func NewCLIParser(version string, args []string) *CLIParser {
-	flags := flag.NewFlagSet(fmt.Sprintf("huguinho @ %s", version), flag.ContinueOnError)
+	flags := flag.NewFlagSet(fmt.Sprintf("hugoinho @ %s", version), flag.ContinueOnError)
 	buffer := new(bytes.Buffer)
 	flags.SetOutput(buffer)
 
