@@ -1,6 +1,8 @@
 package core
 
 import (
+	"fmt"
+
 	"github.com/mdw-tools/hugoinho/contracts"
 )
 
@@ -14,23 +16,23 @@ func NewMetadataValidationHandler() *MetadataValidationHandler {
 
 func (this *MetadataValidationHandler) Handle(article *contracts.Article) {
 	if article.Metadata.Title == "" {
-		article.Error = StackTraceError(errBlankMetadataTitle)
+		article.Error = fmt.Errorf("[%s] %w", article.Source.Path, StackTraceError(errBlankMetadataTitle))
 		return
 	}
 
 	if article.Metadata.Slug == "" {
-		article.Error = StackTraceError(errBlankMetadataSlug)
+		article.Error = fmt.Errorf("[%s] %w", article.Source.Path, StackTraceError(errBlankMetadataSlug))
 		return
 	}
 
 	if article.Metadata.Date.IsZero() {
-		article.Error = StackTraceError(errBlankMetadataDate)
+		article.Error = fmt.Errorf("[%s] %w", article.Source.Path, StackTraceError(errBlankMetadataDate))
 		return
 	}
 
 	_, found := this.slugs[article.Metadata.Slug]
 	if found {
-		article.Error = StackTraceError(errRepeatedMetadataSlug)
+		article.Error = fmt.Errorf("[%s] %w", article.Source.Path, StackTraceError(errRepeatedMetadataSlug))
 		return
 	}
 

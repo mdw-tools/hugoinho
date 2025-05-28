@@ -22,6 +22,9 @@ type MetadataValidationHandlerFixture struct {
 func (this *MetadataValidationHandlerFixture) Setup() {
 	this.handler = NewMetadataValidationHandler()
 	this.article = &contracts.Article{
+		Source: contracts.ArticleSource{
+			Path: "/the/article/path",
+		},
 		Metadata: contracts.ArticleMetadata{
 			Draft:  false,
 			Slug:   "/slug1",
@@ -41,16 +44,19 @@ func (this *MetadataValidationHandlerFixture) TestMissingTitle_Err() {
 	this.article.Metadata.Title = ""
 	this.handler.Handle(this.article)
 	this.So(this.article.Error, should.WrapError, errBlankMetadataTitle)
+	this.So(this.article.Error.Error(), should.Contain, this.article.Source.Path)
 }
 func (this *MetadataValidationHandlerFixture) TestMissingSlug_Err() {
 	this.article.Metadata.Slug = ""
 	this.handler.Handle(this.article)
 	this.So(this.article.Error, should.WrapError, errBlankMetadataSlug)
+	this.So(this.article.Error.Error(), should.Contain, this.article.Source.Path)
 }
 func (this *MetadataValidationHandlerFixture) TestMissingDate_Err() {
 	this.article.Metadata.Date = time.Time{}
 	this.handler.Handle(this.article)
 	this.So(this.article.Error, should.WrapError, errBlankMetadataDate)
+	this.So(this.article.Error.Error(), should.Contain, this.article.Source.Path)
 }
 func (this *MetadataValidationHandlerFixture) TestUniqueSlugs_OK() {
 	this.assertHandleWithSlugOK("a")
