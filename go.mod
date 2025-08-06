@@ -1,6 +1,6 @@
 module github.com/mdw-tools/hugoinho
 
-go 1.22
+go 1.24
 
 require (
 	github.com/mdw-go/testing v1.5.1
