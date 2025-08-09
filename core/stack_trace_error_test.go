@@ -4,6 +4,7 @@ import (
 	"errors"
 	"testing"
 
+	"github.com/mdw-go/testing/v2/better"
 	"github.com/mdw-go/testing/v2/should"
 	"github.com/mdw-go/testing/v2/suite"
 )
@@ -19,10 +20,10 @@ type StackTraceErrorFixture struct {
 func (this *StackTraceErrorFixture) Test() {
 	gopherErr := errors.New("gophers")
 	err := StackTraceError(gopherErr)
-	if this.So(err, should.WrapError, gopherErr) {
-		this.So(err.Error(), should.Contain, "gophers")
-		this.So(err.Error(), should.Contain, "stack:")
-	}
+	this.So(err, better.NOT.BeNil)
+	this.So(err, better.WrapError, gopherErr)
+	this.So(err.Error(), should.Contain, "gophers")
+	this.So(err.Error(), should.Contain, "stack:")
 }
 
 func (this *StackTraceErrorFixture) TestNil() {

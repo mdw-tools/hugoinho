@@ -10,6 +10,7 @@ import (
 	"testing"
 	"time"
 
+	"github.com/mdw-go/testing/v2/better"
 	"github.com/mdw-go/testing/v2/should"
 	"github.com/mdw-go/testing/v2/suite"
 )
@@ -69,18 +70,16 @@ func (this *PipelineRunnerFixture) ls(root string) {
 }
 func (this *PipelineRunnerFixture) assertFolder(path string) {
 	dir := this.disk.Files[path]
-	if this.So(dir, should.NOT.BeNil) {
-		this.So(dir.IsDir(), should.BeTrue)
-	}
+	this.So(dir, better.NOT.BeNil)
+	this.So(dir.IsDir(), should.BeTrue)
 }
 func (this *PipelineRunnerFixture) assertFile(path, expectedContent string) {
 	this.Println("Path:", path)
 	file := this.disk.Files[path]
-	if this.So(file, should.NOT.BeNil) {
-		actual := strings.ReplaceAll(strings.TrimSpace(file.Content()), "\n", `\n`)
-		expected := strings.ReplaceAll(strings.TrimSpace(expectedContent), "\n", `\n`)
-		this.So(actual, should.Equal, expected)
-	}
+	this.So(file, better.NOT.BeNil)
+	actual := strings.ReplaceAll(strings.TrimSpace(file.Content()), "\n", `\n`)
+	expected := strings.ReplaceAll(strings.TrimSpace(expectedContent), "\n", `\n`)
+	this.So(actual, should.Equal, expected)
 }
 
 func (this *PipelineRunnerFixture) TestBadConfigPreventsProcessing_Error() {

@@ -5,6 +5,7 @@ import (
 	"strings"
 	"testing"
 
+	"github.com/mdw-go/testing/v2/better"
 	"github.com/mdw-go/testing/v2/should"
 	"github.com/mdw-go/testing/v2/suite"
 	"github.com/mdw-tools/hugoinho/contracts"
@@ -109,10 +110,9 @@ func (this *ListRenderingHandlerSuite) TestFileTemplateRenderedAndWrittenToDisk(
 	this.So(err, should.BeNil)
 	this.assertHandledArticlesRendered()
 	this.So(this.disk.Files, should.Contain, "output/folder")
-	if this.So(this.disk.Files, should.Contain, "output/folder/index.html") {
-		file := this.disk.Files["output/folder/index.html"]
-		this.So(file.Content(), should.Equal, "RENDERED")
-	}
+	this.So(this.disk.Files, better.Contain, "output/folder/index.html")
+	file := this.disk.Files["output/folder/index.html"]
+	this.So(file.Content(), should.Equal, "RENDERED")
 }
 func (this *ListRenderingHandlerSuite) TestRenderErrorReturned() {
 	renderErr := errors.New("boink")

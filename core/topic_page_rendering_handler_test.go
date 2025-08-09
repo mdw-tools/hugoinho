@@ -4,6 +4,7 @@ import (
 	"errors"
 	"testing"
 
+	"github.com/mdw-go/testing/v2/better"
 	"github.com/mdw-go/testing/v2/should"
 	"github.com/mdw-go/testing/v2/suite"
 	"github.com/mdw-tools/hugoinho/contracts"
@@ -108,10 +109,9 @@ func (this *TopicPageRenderingHandlerFixture) TestFileTemplateRenderedAndWritten
 	this.So(err, should.BeNil)
 	this.assertHandledArticlesRendered()
 	this.So(this.disk.Files, should.Contain, "output/folder")
-	if this.So(this.disk.Files, should.Contain, "output/folder/topics/index.html") {
-		file := this.disk.Files["output/folder/topics/index.html"]
-		this.So(file.Content(), should.Equal, "RENDERED")
-	}
+	this.So(this.disk.Files, better.Contain, "output/folder/topics/index.html")
+	file := this.disk.Files["output/folder/topics/index.html"]
+	this.So(file.Content(), should.Equal, "RENDERED")
 }
 
 func (this *TopicPageRenderingHandlerFixture) TestRenderErrorReturned() {
