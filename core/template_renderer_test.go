@@ -4,16 +4,17 @@ import (
 	"testing"
 	"text/template"
 
-	"github.com/mdw-go/testing/should"
+	"github.com/mdw-go/testing/v2/should"
+	"github.com/mdw-go/testing/v2/suite"
 	"github.com/mdw-tools/hugoinho/contracts"
 )
 
 func TestTemplateRendererFixture(t *testing.T) {
-	should.Run(&TemplateRendererFixture{T: should.New(t)}, should.Options.UnitTests())
+	suite.Run(&TemplateRendererFixture{T: suite.New(t)}, suite.Options.UnitTests())
 }
 
 type TemplateRendererFixture struct {
-	*should.T
+	*suite.T
 
 	templates *template.Template
 	renderer  *TemplateRenderer

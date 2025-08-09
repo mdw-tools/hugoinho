@@ -3,16 +3,17 @@ package core
 import (
 	"testing"
 
-	"github.com/mdw-go/testing/should"
+	"github.com/mdw-go/testing/v2/should"
+	"github.com/mdw-go/testing/v2/suite"
 	"github.com/mdw-tools/hugoinho/contracts"
 )
 
 func TestDraftFilteringHandlerFixture(t *testing.T) {
-	should.Run(&DraftFilteringHandlerFixture{T: should.New(t)}, should.Options.UnitTests())
+	suite.Run(&DraftFilteringHandlerFixture{T: suite.New(t)}, suite.Options.UnitTests())
 }
 
 type DraftFilteringHandlerFixture struct {
-	*should.T
+	*suite.T
 }
 
 func (this *DraftFilteringHandlerFixture) article(draft bool) *contracts.Article {

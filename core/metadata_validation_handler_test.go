@@ -4,16 +4,17 @@ import (
 	"testing"
 	"time"
 
-	"github.com/mdw-go/testing/should"
+	"github.com/mdw-go/testing/v2/should"
+	"github.com/mdw-go/testing/v2/suite"
 	"github.com/mdw-tools/hugoinho/contracts"
 )
 
 func TestMetadataValidationHandlerFixture(t *testing.T) {
-	should.Run(&MetadataValidationHandlerFixture{T: should.New(t)}, should.Options.UnitTests())
+	suite.Run(&MetadataValidationHandlerFixture{T: suite.New(t)}, suite.Options.UnitTests())
 }
 
 type MetadataValidationHandlerFixture struct {
-	*should.T
+	*suite.T
 
 	handler *MetadataValidationHandler
 	article *contracts.Article

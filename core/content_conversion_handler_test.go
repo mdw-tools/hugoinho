@@ -4,16 +4,17 @@ import (
 	"errors"
 	"testing"
 
-	"github.com/mdw-go/testing/should"
+	"github.com/mdw-go/testing/v2/should"
+	"github.com/mdw-go/testing/v2/suite"
 	"github.com/mdw-tools/hugoinho/contracts"
 )
 
 func TestContentConversionHandlerFixture(t *testing.T) {
-	should.Run(&ContentConversionHandlerFixture{T: should.New(t)}, should.Options.UnitTests())
+	suite.Run(&ContentConversionHandlerFixture{T: suite.New(t)}, suite.Options.UnitTests())
 }
 
 type ContentConversionHandlerFixture struct {
-	*should.T
+	*suite.T
 
 	converter *ContentConversionHandler
 	inner     *FakeConverter

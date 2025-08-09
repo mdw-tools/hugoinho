@@ -4,16 +4,17 @@ import (
 	"testing"
 	"time"
 
-	"github.com/mdw-go/testing/should"
+	"github.com/mdw-go/testing/v2/should"
+	"github.com/mdw-go/testing/v2/suite"
 	"github.com/mdw-tools/hugoinho/contracts"
 )
 
 func TestFutureFilteringHandlerFixture(t *testing.T) {
-	should.Run(&FutureFilteringHandlerFixture{T: should.New(t)}, should.Options.UnitTests())
+	suite.Run(&FutureFilteringHandlerFixture{T: suite.New(t)}, suite.Options.UnitTests())
 }
 
 type FutureFilteringHandlerFixture struct {
-	*should.T
+	*suite.T
 
 	present time.Time
 	past    time.Time

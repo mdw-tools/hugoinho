@@ -4,16 +4,17 @@ import (
 	"fmt"
 	"testing"
 
-	"github.com/mdw-go/testing/should"
+	"github.com/mdw-go/testing/v2/should"
+	"github.com/mdw-go/testing/v2/suite"
 	"github.com/mdw-tools/hugoinho/contracts"
 )
 
 func TestListenerFixture(t *testing.T) {
-	should.Run(&ListenerFixture{T: should.New(t)}, should.Options.UnitTests())
+	suite.Run(&ListenerFixture{T: suite.New(t)}, suite.Options.UnitTests())
 }
 
 type ListenerFixture struct {
-	*should.T
+	*suite.T
 	input   chan contracts.Article
 	output  chan contracts.Article
 	handler *FakeHandler

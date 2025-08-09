@@ -4,16 +4,17 @@ import (
 	"bytes"
 	"testing"
 
-	"github.com/mdw-go/testing/should"
+	"github.com/mdw-go/testing/v2/should"
+	"github.com/mdw-go/testing/v2/suite"
 	"github.com/mdw-tools/hugoinho/contracts"
 )
 
 func TestCLIParserFixture(t *testing.T) {
-	should.Run(&CLIParserFixture{T: should.New(t)}, should.Options.UnitTests())
+	suite.Run(&CLIParserFixture{T: suite.New(t)}, suite.Options.UnitTests())
 }
 
 type CLIParserFixture struct {
-	*should.T
+	*suite.T
 
 	output *bytes.Buffer
 	args   []string

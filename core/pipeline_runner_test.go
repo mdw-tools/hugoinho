@@ -10,15 +10,16 @@ import (
 	"testing"
 	"time"
 
-	"github.com/mdw-go/testing/should"
+	"github.com/mdw-go/testing/v2/should"
+	"github.com/mdw-go/testing/v2/suite"
 )
 
 func TestPipelineRunnerFixture(t *testing.T) {
-	should.Run(&PipelineRunnerFixture{T: should.New(t)}, should.Options.UnitTests())
+	suite.Run(&PipelineRunnerFixture{T: suite.New(t)}, suite.Options.UnitTests())
 }
 
 type PipelineRunnerFixture struct {
-	*should.T
+	*suite.T
 
 	log      *bytes.Buffer
 	started  time.Time

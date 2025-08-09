@@ -4,16 +4,17 @@ import (
 	"errors"
 	"testing"
 
-	"github.com/mdw-go/testing/should"
+	"github.com/mdw-go/testing/v2/should"
+	"github.com/mdw-go/testing/v2/suite"
 	"github.com/mdw-tools/hugoinho/contracts"
 )
 
 func TestFileReaderFixture(t *testing.T) {
-	should.Run(&FileReaderFixture{T: should.New(t)}, should.Options.UnitTests())
+	suite.Run(&FileReaderFixture{T: suite.New(t)}, suite.Options.UnitTests())
 }
 
 type FileReaderFixture struct {
-	*should.T
+	*suite.T
 	reader *FileReadingHandler
 	files  *InMemoryFileSystem
 }

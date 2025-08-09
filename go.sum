@@ -1,4 +1,4 @@
-github.com/mdw-go/testing v1.5.1 h1:lUcj4MM7SA29bZ6PPspaqw2PpPmb/GL/EuoEQSPzeOI=
-github.com/mdw-go/testing v1.5.1/go.mod h1:PpDrOp7WpQjh7nREEh8v0d7DZDA4Y/ffLEh/ixCGLlY=
+github.com/mdw-go/testing/v2 v2.0.0 h1:gxhmYzZL3jeeTgBFjqYtXwp5nuk2hoZbNZ9PBgPzYzg=
+github.com/mdw-go/testing/v2 v2.0.0/go.mod h1:5fm8B/ncNxEyKICkVoHt/ujcKREH6Y6Wg1QIkL+5vAE=
 github.com/yuin/goldmark v1.7.13 h1:GPddIs617DnBLFFVJFgpo1aBfe/4xcvMc3SB5t/D0pA=
 github.com/yuin/goldmark v1.7.13/go.mod h1:ip/1k0VRfGynBgxOz0yCqHrbZXhcjxyuS66Brc7iBKg=

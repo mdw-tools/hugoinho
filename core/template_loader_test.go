@@ -4,16 +4,17 @@ import (
 	"errors"
 	"testing"
 
-	"github.com/mdw-go/testing/should"
+	"github.com/mdw-go/testing/v2/should"
+	"github.com/mdw-go/testing/v2/suite"
 	"github.com/mdw-tools/hugoinho/contracts"
 )
 
 func TestTemplateLoaderFixture(t *testing.T) {
-	should.Run(&TemplateLoaderFixture{T: should.New(t)}, should.Options.UnitTests())
+	suite.Run(&TemplateLoaderFixture{T: suite.New(t)}, suite.Options.UnitTests())
 }
 
 type TemplateLoaderFixture struct {
-	*should.T
+	*suite.T
 
 	disk   *InMemoryFileSystem
 	loader *TemplateLoader

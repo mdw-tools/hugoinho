@@ -4,16 +4,17 @@ import (
 	"errors"
 	"testing"
 
-	"github.com/mdw-go/testing/should"
+	"github.com/mdw-go/testing/v2/should"
+	"github.com/mdw-go/testing/v2/suite"
 	"github.com/mdw-tools/hugoinho/contracts"
 )
 
 func TestTopicPageRenderingHandlerFixture(t *testing.T) {
-	should.Run(&TopicPageRenderingHandlerFixture{T: should.New(t)}, should.Options.UnitTests())
+	suite.Run(&TopicPageRenderingHandlerFixture{T: suite.New(t)}, suite.Options.UnitTests())
 }
 
 type TopicPageRenderingHandlerFixture struct {
-	*should.T
+	*suite.T
 
 	handler  *TopicPageRenderingHandler
 	disk     *InMemoryFileSystem

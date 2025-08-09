@@ -4,16 +4,17 @@ import (
 	"errors"
 	"testing"
 
-	"github.com/mdw-go/testing/should"
+	"github.com/mdw-go/testing/v2/should"
+	"github.com/mdw-go/testing/v2/suite"
 	"github.com/mdw-tools/hugoinho/contracts"
 )
 
 func TestPathLoaderFixture(t *testing.T) {
-	should.Run(&PathLoaderFixture{T: should.New(t)}, should.Options.UnitTests())
+	suite.Run(&PathLoaderFixture{T: suite.New(t)}, suite.Options.UnitTests())
 }
 
 type PathLoaderFixture struct {
-	*should.T
+	*suite.T
 	loader *PathLoader
 	files  *InMemoryFileSystem
 	output chan contracts.Article

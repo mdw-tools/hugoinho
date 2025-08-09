@@ -5,16 +5,17 @@ import (
 	"strings"
 	"testing"
 
-	"github.com/mdw-go/testing/should"
+	"github.com/mdw-go/testing/v2/should"
+	"github.com/mdw-go/testing/v2/suite"
 	"github.com/mdw-tools/hugoinho/contracts"
 )
 
 func TestListRenderingHandlerSuite(t *testing.T) {
-	should.Run(&ListRenderingHandlerSuite{T: should.New(t)}, should.Options.UnitTests())
+	suite.Run(&ListRenderingHandlerSuite{T: suite.New(t)}, suite.Options.UnitTests())
 }
 
 type ListRenderingHandlerSuite struct {
-	*should.T
+	*suite.T
 
 	handler  *ListRenderingHandler
 	renderer *FakeRenderer

@@ -3,16 +3,17 @@ package core
 import (
 	"testing"
 
-	"github.com/mdw-go/testing/should"
+	"github.com/mdw-go/testing/v2/should"
+	"github.com/mdw-go/testing/v2/suite"
 	"github.com/mdw-tools/hugoinho/contracts"
 )
 
 func TestMetadataParserFixture(t *testing.T) {
-	should.Run(&MetadataParserFixture{T: should.New(t)}, should.Options.UnitTests())
+	suite.Run(&MetadataParserFixture{T: suite.New(t)}, suite.Options.UnitTests())
 }
 
 type MetadataParserFixture struct {
-	*should.T
+	*suite.T
 	parser  *MetadataParsingHandler
 	article *contracts.Article
 }

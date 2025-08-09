@@ -8,16 +8,17 @@ import (
 	"testing"
 	"time"
 
-	"github.com/mdw-go/testing/should"
+	"github.com/mdw-go/testing/v2/should"
+	"github.com/mdw-go/testing/v2/suite"
 	"github.com/mdw-tools/hugoinho/contracts"
 )
 
 func TestReporterFixture(t *testing.T) {
-	should.Run(&ReporterFixture{T: should.New(t)}, should.Options.UnitTests())
+	suite.Run(&ReporterFixture{T: suite.New(t)}, suite.Options.UnitTests())
 }
 
 type ReporterFixture struct {
-	*should.T
+	*suite.T
 }
 
 func (this *ReporterFixture) Test() {

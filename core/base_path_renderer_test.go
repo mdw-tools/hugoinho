@@ -4,16 +4,17 @@ import (
 	"strings"
 	"testing"
 
-	"github.com/mdw-go/testing/should"
+	"github.com/mdw-go/testing/v2/should"
+	"github.com/mdw-go/testing/v2/suite"
 	"github.com/mdw-tools/hugoinho/contracts"
 )
 
 func TestBasePathRendererSuite(t *testing.T) {
-	should.Run(&BasePathRendererSuite{T: should.New(t)}, should.Options.UnitTests())
+	suite.Run(&BasePathRendererSuite{T: suite.New(t)}, suite.Options.UnitTests())
 }
 
 type BasePathRendererSuite struct {
-	*should.T
+	*suite.T
 	inner    *FakeRenderer
 	renderer contracts.Renderer
 }

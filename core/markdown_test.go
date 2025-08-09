@@ -3,15 +3,16 @@ package core
 import (
 	"testing"
 
-	"github.com/mdw-go/testing/should"
+	"github.com/mdw-go/testing/v2/should"
+	"github.com/mdw-go/testing/v2/suite"
 )
 
 func TestGoldmarkMarkdownConverterFixture(t *testing.T) {
-	should.Run(&GoldmarkMarkdownConverterFixture{T: should.New(t)}, should.Options.UnitTests())
+	suite.Run(&GoldmarkMarkdownConverterFixture{T: suite.New(t)}, suite.Options.UnitTests())
 }
 
 type GoldmarkMarkdownConverterFixture struct {
-	*should.T
+	*suite.T
 
 	converter *GoldmarkMarkdownConverter
 }

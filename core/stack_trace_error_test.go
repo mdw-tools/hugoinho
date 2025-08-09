@@ -4,15 +4,16 @@ import (
 	"errors"
 	"testing"
 
-	"github.com/mdw-go/testing/should"
+	"github.com/mdw-go/testing/v2/should"
+	"github.com/mdw-go/testing/v2/suite"
 )
 
 func TestTraceErrorFixture(t *testing.T) {
-	should.Run(&StackTraceErrorFixture{T: should.New(t)}, should.Options.UnitTests())
+	suite.Run(&StackTraceErrorFixture{T: suite.New(t)}, suite.Options.UnitTests())
 }
 
 type StackTraceErrorFixture struct {
-	*should.T
+	*suite.T
 }
 
 func (this *StackTraceErrorFixture) Test() {
