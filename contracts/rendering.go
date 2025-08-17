@@ -22,8 +22,12 @@ var (
 
 type (
 	RenderedListPage struct {
-		Title           string
-		Intro           string
+		// Deprecated
+		Title string
+
+		// Deprecated
+		Intro string
+
 		LatestArticle   RenderedArticleSummary
 		ProminentTopics []string
 		Pages           []RenderedArticleSummary

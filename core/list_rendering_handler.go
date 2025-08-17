@@ -60,7 +60,6 @@ func (this *ListRenderingHandler) Finalize() error {
 	this.listing = slices.SortedFunc(slices.Values(this.listing), this.sorter)
 
 	rendered, err := this.renderer.Render(contracts.RenderedListPage{
-		Title:           this.title,
 		LatestArticle:   this.listing[0],
 		ProminentTopics: this.topics.TopN(30),
 		Pages:           this.listing,

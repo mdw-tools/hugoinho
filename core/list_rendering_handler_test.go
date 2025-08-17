@@ -74,7 +74,6 @@ func (this *ListRenderingHandlerSuite) sorter(i, j contracts.RenderedArticleSumm
 }
 func (this *ListRenderingHandlerSuite) assertHandledArticlesRendered() {
 	this.So(this.renderer.rendered, should.Equal, contracts.RenderedListPage{
-		Title: "TITLE",
 		LatestArticle: contracts.RenderedArticleSummary{
 			Slug:   "/a",
 			Title:  "A",
