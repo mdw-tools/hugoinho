@@ -29,7 +29,6 @@ func NewCLIParser(version string, args []string) *CLIParser {
 }
 
 func (this *CLIParser) Parse() (config contracts.Config, err error) {
-	this.stringFlag("author   ", "Blog author name.                  ", "author   ", &config.Author)
 	this.stringFlag("templates", "Directory with html templates.     ", "templates", &config.TemplateDir)
 	this.stringFlag("content  ", "Directory with markdown content.   ", "content  ", &config.ContentRoot)
 	this.stringFlag("target   ", "Directory for rendered html.       ", "rendered ", &config.TargetRoot)

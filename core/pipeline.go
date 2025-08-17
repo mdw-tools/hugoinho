@@ -38,7 +38,6 @@ func (this *Pipeline) Run() (out chan contracts.Article) {
 		this.renderer,
 		this.disk,
 		this.config.TargetRoot,
-		this.config.Author,
 	))
 	return out
 }

@@ -17,7 +17,6 @@ type ListRenderingHandler struct {
 	renderer contracts.Renderer
 	disk     RenderingFileSystem
 	output   string
-	title    string
 }
 
 func NewListRenderingHandler(
@@ -25,7 +24,7 @@ func NewListRenderingHandler(
 	sorter contracts.Sorter,
 	renderer contracts.Renderer,
 	disk RenderingFileSystem,
-	output, title string,
+	output string,
 ) *ListRenderingHandler {
 	return &ListRenderingHandler{
 		filter:   filter,
@@ -33,7 +32,6 @@ func NewListRenderingHandler(
 		renderer: renderer,
 		disk:     disk,
 		output:   output,
-		title:    title,
 		topics:   make(map[string]int),
 	}
 }

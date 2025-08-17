@@ -35,7 +35,6 @@ func (this *CLIParserFixture) TestDefaults() {
 	config, err := this.Parse()
 	this.So(err, should.BeNil)
 	this.So(config, should.Equal, contracts.Config{
-		Author:      "author",
 		TemplateDir: "templates",
 		ContentRoot: "content",
 		TargetRoot:  "rendered",
@@ -47,7 +46,6 @@ func (this *CLIParserFixture) TestDefaults() {
 
 func (this *CLIParserFixture) TestCustomValues() {
 	this.args = []string{
-		"-author", "author-name",
 		"-templates", "other-templates",
 		"-content", "other-content",
 		"-target", "other-rendered",
@@ -58,7 +56,6 @@ func (this *CLIParserFixture) TestCustomValues() {
 	config, err := this.Parse()
 	this.So(err, should.BeNil)
 	this.So(config, should.Equal, contracts.Config{
-		Author:      "author-name",
 		TemplateDir: "other-templates",
 		ContentRoot: "other-content",
 		TargetRoot:  "other-rendered",

@@ -114,7 +114,7 @@ func (this *ListRenderingHandlerSuite) assertHandledArticlesRendered() {
 func (this *ListRenderingHandlerSuite) Setup() {
 	this.renderer = NewFakeRenderer()
 	this.disk = NewInMemoryFileSystem()
-	this.handler = NewListRenderingHandler(this.filter, this.sorter, this.renderer, this.disk, "output/folder", "TITLE")
+	this.handler = NewListRenderingHandler(this.filter, this.sorter, this.renderer, this.disk, "output/folder")
 }
 func (this *ListRenderingHandlerSuite) handleAndFinalize() error {
 	this.handler.Handle(articleC)

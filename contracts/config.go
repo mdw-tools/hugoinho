@@ -1,7 +1,6 @@
 package contracts
 
 type Config struct {
-	Author      string
 	TemplateDir string
 	ContentRoot string
 	TargetRoot  string
