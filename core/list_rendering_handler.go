@@ -1,6 +1,8 @@
 package core
 
 import (
+	"cmp"
+	"maps"
 	"path/filepath"
 	"slices"
 
@@ -9,6 +11,7 @@ import (
 
 type ListRenderingHandler struct {
 	listing  []contracts.RenderedArticleSummary
+	topics   leaderboard[string]
 	filter   contracts.Filter
 	sorter   contracts.Sorter
 	renderer contracts.Renderer
@@ -31,11 +34,15 @@ func NewListRenderingHandler(
 		disk:     disk,
 		output:   output,
 		title:    title,
+		topics:   make(map[string]int),
 	}
 }
 func (this *ListRenderingHandler) Handle(article *contracts.Article) {
 	if !this.filter(article) {
 		return
+	}
+	for topic := range slices.Values(article.Metadata.Topics) {
+		this.topics[topic]++
 	}
 	this.listing = append(this.listing, contracts.RenderedArticleSummary{
 		Slug:   article.Metadata.Slug,
@@ -53,8 +60,10 @@ func (this *ListRenderingHandler) Finalize() error {
 	this.listing = slices.SortedFunc(slices.Values(this.listing), this.sorter)
 
 	rendered, err := this.renderer.Render(contracts.RenderedListPage{
-		Title: this.title,
-		Pages: this.listing,
+		Title:           this.title,
+		LatestArticle:   this.listing[0],
+		ProminentTopics: this.topics.TopN(30),
+		Pages:           this.listing,
 	})
 	if err != nil {
 		return StackTraceError(err)
@@ -71,4 +80,18 @@ func (this *ListRenderingHandler) Finalize() error {
 	}
 
 	return nil
+}
+
+type leaderboard[T comparable] map[T]int
+
+func (this leaderboard[T]) TopN(n int) (result []T) {
+	return take(n, slices.SortedStableFunc(maps.Keys(this), func(i, j T) int {
+		return -cmp.Compare(this[i], this[j])
+	}))
+}
+func take[T any](i int, s []T) []T {
+	if len(s) > i {
+		return s[:i]
+	}
+	return s
 }

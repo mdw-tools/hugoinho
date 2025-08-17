@@ -44,6 +44,16 @@ var (
 			Date:   Date(2023, 7, 8),
 		},
 	}
+	articleB2 = &contracts.Article{
+		Metadata: contracts.ArticleMetadata{
+			Draft:  true,
+			Slug:   "/b/2",
+			Title:  "B2",
+			Intro:  "bb",
+			Topics: []string{"topic-b"},
+			Date:   Date(2023, 7, 8),
+		},
+	}
 	articleC = &contracts.Article{
 		Metadata: contracts.ArticleMetadata{
 			Draft:  false,
@@ -65,6 +75,15 @@ func (this *ListRenderingHandlerSuite) sorter(i, j contracts.RenderedArticleSumm
 func (this *ListRenderingHandlerSuite) assertHandledArticlesRendered() {
 	this.So(this.renderer.rendered, should.Equal, contracts.RenderedListPage{
 		Title: "TITLE",
+		LatestArticle: contracts.RenderedArticleSummary{
+			Slug:   "/a",
+			Title:  "A",
+			Intro:  "aa",
+			Date:   Date(2023, 7, 7),
+			Topics: []string{"topic-a"},
+			Draft:  false,
+		},
+		ProminentTopics: []string{"topic-b", "topic-a"},
 		Pages: []contracts.RenderedArticleSummary{
 			{
 				Slug:   "/a",
@@ -82,6 +101,14 @@ func (this *ListRenderingHandlerSuite) assertHandledArticlesRendered() {
 				Topics: []string{"topic-b"},
 				Draft:  true,
 			},
+			{
+				Slug:   "/b/2",
+				Title:  "B2",
+				Intro:  "bb",
+				Date:   Date(2023, 7, 8),
+				Topics: []string{"topic-b"},
+				Draft:  true,
+			},
 		},
 	})
 }
@@ -93,6 +120,7 @@ func (this *ListRenderingHandlerSuite) Setup() {
 func (this *ListRenderingHandlerSuite) handleAndFinalize() error {
 	this.handler.Handle(articleC)
 	this.handler.Handle(articleB)
+	this.handler.Handle(articleB2)
 	this.handler.Handle(articleA)
 	return this.handler.Finalize()
 }
@@ -142,4 +170,22 @@ func (this *ListRenderingHandlerSuite) TestWriteFileErrorReturned() {
 
 	this.So(err, should.WrapError, writeFileErr)
 	this.So(this.disk.Files, should.NOT.Contain, "output/folder/index.html")
+}
+
+func TestLeaderboardSuite(t *testing.T) {
+	suite.Run(&LeaderboardSuiteSuite{T: suite.New(t)}, suite.Options.UnitTests())
+}
+
+type LeaderboardSuiteSuite struct {
+	*suite.T
+}
+
+func (this *LeaderboardSuiteSuite) Test() {
+	l := leaderboard[string]{
+		"a": 42,
+		"b": 43,
+		"c": 44,
+		"d": 45,
+	}
+	this.So(l.TopN(3), should.Equal, []string{"d", "c", "b"})
 }

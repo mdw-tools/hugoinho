@@ -22,9 +22,11 @@ var (
 
 type (
 	RenderedListPage struct {
-		Title string
-		Intro string
-		Pages []RenderedArticleSummary
+		Title           string
+		Intro           string
+		LatestArticle   RenderedArticleSummary
+		ProminentTopics []string
+		Pages           []RenderedArticleSummary
 	}
 
 	RenderedArticle struct {
