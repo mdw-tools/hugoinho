@@ -81,8 +81,10 @@ func (this *ListRenderingHandler) Finalize() error {
 
 type leaderboard[T cmp.Ordered] map[T]int
 
+func (this leaderboard[T]) compare(i, j T) int {
+	return -cmp.Compare(this[i], this[j])
+}
 func (this leaderboard[T]) TopN(n int) (result []T) {
-	return slices.SortedStableFunc(maps.Keys(this), func(i, j T) int {
-		return -cmp.Compare(this[i], this[j])
-	})[:min(n, len(this))]
+	return slices.SortedStableFunc(
+		maps.Keys(this), this.compare)[:min(n, len(this))]
 }
