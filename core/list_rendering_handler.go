@@ -57,12 +57,12 @@ func (this *ListRenderingHandler) Finalize() error {
 	if len(this.listing) == 0 {
 		return nil
 	}
-	this.listing = slices.SortedFunc(slices.Values(this.listing), this.sorter)
-
+	listing := slices.SortedFunc(slices.Values(this.listing), this.sorter)
+	topics := slices.Sorted(slices.Values(this.topics.TopN(30)))
 	rendered, err := this.renderer.Render(contracts.RenderedListPage{
-		LatestArticle:   this.listing[0],
-		ProminentTopics: this.topics.TopN(30),
-		Pages:           this.listing,
+		LatestArticle:   listing[0],
+		ProminentTopics: topics,
+		Pages:           listing,
 	})
 	if err != nil {
 		return StackTraceError(err)
@@ -81,7 +81,7 @@ func (this *ListRenderingHandler) Finalize() error {
 	return nil
 }
 
-type leaderboard[T comparable] map[T]int
+type leaderboard[T cmp.Ordered] map[T]int
 
 func (this leaderboard[T]) TopN(n int) (result []T) {
 	return take(n, slices.SortedStableFunc(maps.Keys(this), func(i, j T) int {

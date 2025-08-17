@@ -82,7 +82,7 @@ func (this *ListRenderingHandlerSuite) assertHandledArticlesRendered() {
 			Topics: []string{"topic-a"},
 			Draft:  false,
 		},
-		ProminentTopics: []string{"topic-b", "topic-a"},
+		ProminentTopics: []string{"topic-a", "topic-b"},
 		Pages: []contracts.RenderedArticleSummary{
 			{
 				Slug:   "/a",
