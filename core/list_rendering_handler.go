@@ -2,7 +2,7 @@ package core
 
 import (
 	"path/filepath"
-	"sort"
+	"slices"
 
 	"github.com/mdw-tools/hugoinho/contracts"
 )
@@ -50,10 +50,7 @@ func (this *ListRenderingHandler) Finalize() error {
 	if len(this.listing) == 0 {
 		return nil
 	}
-
-	sort.SliceStable(this.listing, func(i, j int) bool {
-		return this.sorter(this.listing[i], this.listing[j]) < 0
-	})
+	this.listing = slices.SortedFunc(slices.Values(this.listing), this.sorter)
 
 	rendered, err := this.renderer.Render(contracts.RenderedListPage{
 		Title: this.title,
