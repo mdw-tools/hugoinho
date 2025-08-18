@@ -32,7 +32,7 @@ func NewListRenderingHandler(
 		renderer: renderer,
 		disk:     disk,
 		output:   output,
-		topics:   make(map[string]int),
+		topics:   make(leaderboard[string]),
 	}
 }
 func (this *ListRenderingHandler) Handle(article *contracts.Article) {
@@ -85,6 +85,5 @@ func (this leaderboard[T]) compare(i, j T) int {
 	return -cmp.Compare(this[i], this[j])
 }
 func (this leaderboard[T]) TopN(n int) (result []T) {
-	return slices.SortedStableFunc(
-		maps.Keys(this), this.compare)[:min(n, len(this))]
+	return slices.SortedStableFunc(maps.Keys(this), this.compare)[:min(n, len(this))]
 }
