@@ -11,12 +11,8 @@
     </head>
 
     <body>
-        <nav>
-            <a href="/topics/">Index</a> ~
-            <a href="/archives/">Archives</a> ~
-            <a href="/about/">About</a>
-        </nav>
-        <h1>Example Site</h1>
+        <nav><a href="/">Home</a></nav>
+        <h1>Archives</h1>
         <dl>
             {{ range .Pages }}{{ if ne (.Date.Format "2006-01-02") "2000-01-01" }}
                 <dt>{{ if .Draft }}[DRAFT]{{ end }}<a href="{{ .Slug }}">{{ .Title }}</a></dt>
