@@ -18,7 +18,7 @@ func NewTemplateRenderer(templates *template.Template) *TemplateRenderer {
 }
 
 func (this *TemplateRenderer) Validate() error {
-	_, err := this.Render(contracts.RenderedListPage{})
+	_, err := this.Render(contracts.RenderedHomePage{})
 	if err != nil {
 		return err
 	}
@@ -45,7 +45,7 @@ func (this *TemplateRenderer) Render(v any) (string, error) {
 	case contracts.RenderedTopicsListing:
 		return this.render(contracts.TopicsTemplateName, v)
 
-	case contracts.RenderedListPage:
+	case contracts.RenderedHomePage:
 		return this.render(contracts.HomePageTemplateName, v)
 
 	default:

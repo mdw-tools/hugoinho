@@ -9,8 +9,8 @@ import (
 	"github.com/mdw-tools/hugoinho/contracts"
 )
 
-type ListRenderingHandler struct {
-	listing  []contracts.RenderedArticleSummary
+type HomepageRenderingHandler struct {
+	pages    []contracts.RenderedArticleSummary
 	topics   leaderboard[string]
 	filter   contracts.Filter
 	sorter   contracts.Sorter
@@ -19,14 +19,14 @@ type ListRenderingHandler struct {
 	output   string
 }
 
-func NewListRenderingHandler(
+func NewHomepageRenderingHandler(
 	filter contracts.Filter,
 	sorter contracts.Sorter,
 	renderer contracts.Renderer,
 	disk RenderingFileSystem,
 	output string,
-) *ListRenderingHandler {
-	return &ListRenderingHandler{
+) *HomepageRenderingHandler {
+	return &HomepageRenderingHandler{
 		filter:   filter,
 		sorter:   sorter,
 		renderer: renderer,
@@ -35,14 +35,14 @@ func NewListRenderingHandler(
 		topics:   make(leaderboard[string]),
 	}
 }
-func (this *ListRenderingHandler) Handle(article *contracts.Article) {
+func (this *HomepageRenderingHandler) Handle(article *contracts.Article) {
 	if !this.filter(article) {
 		return
 	}
 	for topic := range slices.Values(article.Metadata.Topics) {
 		this.topics[topic]++
 	}
-	this.listing = append(this.listing, contracts.RenderedArticleSummary{
+	this.pages = append(this.pages, contracts.RenderedArticleSummary{
 		Slug:   article.Metadata.Slug,
 		Title:  article.Metadata.Title,
 		Intro:  article.Metadata.Intro,
@@ -51,16 +51,13 @@ func (this *ListRenderingHandler) Handle(article *contracts.Article) {
 		Draft:  article.Metadata.Draft,
 	})
 }
-func (this *ListRenderingHandler) Finalize() error {
-	if len(this.listing) == 0 {
+func (this *HomepageRenderingHandler) Finalize() error {
+	if len(this.pages) == 0 {
 		return nil
 	}
-	listing := slices.SortedFunc(slices.Values(this.listing), this.sorter)
-	topics := slices.Sorted(slices.Values(this.topics.TopN(30)))
-	rendered, err := this.renderer.Render(contracts.RenderedListPage{
-		LatestArticle:   listing[0],
-		ProminentTopics: topics,
-		Pages:           listing,
+	rendered, err := this.renderer.Render(contracts.RenderedHomePage{
+		ProminentTopics: this.topics.TopN(30),
+		Pages:           slices.SortedStableFunc(slices.Values(this.pages), this.sorter)[:min(len(this.pages), 10)],
 	})
 	if err != nil {
 		return StackTraceError(err)
@@ -82,7 +79,11 @@ func (this *ListRenderingHandler) Finalize() error {
 type leaderboard[T cmp.Ordered] map[T]int
 
 func (this leaderboard[T]) compare(i, j T) int {
-	return -cmp.Compare(this[i], this[j])
+	rank := -cmp.Compare(this[i], this[j])
+	if rank == 0 {
+		return cmp.Compare(i, j)
+	}
+	return rank
 }
 func (this leaderboard[T]) TopN(n int) (result []T) {
 	return slices.SortedStableFunc(maps.Keys(this), this.compare)[:min(n, len(this))]

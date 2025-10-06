@@ -63,7 +63,7 @@ func (this *TemplateRendererFixture) TestMissingArticleTemplate_ValidateErr() {
 }
 
 func (this *TemplateRendererFixture) TestCanRenderTypesCorrespondingToTemplates() {
-	home, homeErr := this.renderer.Render(contracts.RenderedListPage{})
+	home, homeErr := this.renderer.Render(contracts.RenderedHomePage{})
 	this.So(homeErr, should.BeNil)
 	this.So(home, should.Equal, contracts.HomePageTemplateName)
 

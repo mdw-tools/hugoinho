@@ -38,7 +38,7 @@ func (this *PipelineRunnerFixture) Setup() {
 	this.file("content/b.md", ContentB)
 	this.file("content/c.md", ContentC)
 
-	this.file("templates/listing.tmpl", TemplateHome)
+	this.file("templates/home.tmpl", TemplateHome)
 	this.file("templates/topics.tmpl", TemplateTopics)
 	this.file("templates/article.tmpl", TemplateArticle)
 }
@@ -90,14 +90,14 @@ func (this *PipelineRunnerFixture) TestBadConfigPreventsProcessing_Error() {
 }
 
 func (this *PipelineRunnerFixture) TestTemplateLoadFailurePreventsProcessing_Error() {
-	this.disk.ErrReadFile["templates/listing.tmpl"] = errors.New("gophers")
+	this.disk.ErrReadFile["templates/home.tmpl"] = errors.New("gophers")
 	errs := this.buildRunner().Run()
 	this.So(errs, should.Equal, 1)
 	this.assertOriginalDiskState()
 }
 
 func (this *PipelineRunnerFixture) TestTemplateValidationFailurePreventsProcessing_Error() {
-	this.file("templates/listing.tmpl", `{{ .INVALID }}`)
+	this.file("templates/home.tmpl", `{{ .INVALID }}`)
 	errs := this.buildRunner().Run()
 	this.So(errs, should.Equal, 1)
 	this.assertOriginalDiskState()
@@ -225,22 +225,6 @@ important
 	Intro: The introduction for Article A.
 	Date:  2021-02-08
 
-`
-
-	RenderedListAscending = `
-Slug:   /article-a/
-Title:  Article A
-Date:   2021-02-08
-Intro:  The introduction for Article A.
-Topics: important misc 
-------------------------------------------------------------------
-
-Slug:   /article-b/
-Title:  Article B
-Date:   2021-02-09
-Intro:  The introduction for Article B.
-Topics: important 
-------------------------------------------------------------------
 `
 
 	RenderedListDescending = `

@@ -12,13 +12,13 @@ import (
 )
 
 func TestListRenderingHandlerSuite(t *testing.T) {
-	suite.Run(&ListRenderingHandlerSuite{T: suite.New(t)}, suite.Options.UnitTests())
+	suite.Run(&HomepageRenderingHandlerSuite{T: suite.New(t)}, suite.Options.UnitTests())
 }
 
-type ListRenderingHandlerSuite struct {
+type HomepageRenderingHandlerSuite struct {
 	*suite.T
 
-	handler  *ListRenderingHandler
+	handler  *HomepageRenderingHandler
 	renderer *FakeRenderer
 	disk     *InMemoryFileSystem
 }
@@ -66,23 +66,15 @@ var (
 	}
 )
 
-func (this *ListRenderingHandlerSuite) filter(article *contracts.Article) bool {
+func (this *HomepageRenderingHandlerSuite) filter(article *contracts.Article) bool {
 	return article.Metadata.Title < "C"
 }
-func (this *ListRenderingHandlerSuite) sorter(i, j contracts.RenderedArticleSummary) int {
+func (this *HomepageRenderingHandlerSuite) sorter(i, j contracts.RenderedArticleSummary) int {
 	return strings.Compare(i.Title, j.Title)
 }
-func (this *ListRenderingHandlerSuite) assertHandledArticlesRendered() {
-	this.So(this.renderer.rendered, should.Equal, contracts.RenderedListPage{
-		LatestArticle: contracts.RenderedArticleSummary{
-			Slug:   "/a",
-			Title:  "A",
-			Intro:  "aa",
-			Date:   Date(2023, 7, 7),
-			Topics: []string{"topic-a"},
-			Draft:  false,
-		},
-		ProminentTopics: []string{"topic-a", "topic-b"},
+func (this *HomepageRenderingHandlerSuite) assertHandledArticlesRendered() {
+	this.So(this.renderer.rendered, should.Equal, contracts.RenderedHomePage{
+		ProminentTopics: []string{"topic-b", "topic-a"},
 		Pages: []contracts.RenderedArticleSummary{
 			{
 				Slug:   "/a",
@@ -111,25 +103,25 @@ func (this *ListRenderingHandlerSuite) assertHandledArticlesRendered() {
 		},
 	})
 }
-func (this *ListRenderingHandlerSuite) Setup() {
+func (this *HomepageRenderingHandlerSuite) Setup() {
 	this.renderer = NewFakeRenderer()
 	this.disk = NewInMemoryFileSystem()
-	this.handler = NewListRenderingHandler(this.filter, this.sorter, this.renderer, this.disk, "output/folder")
+	this.handler = NewHomepageRenderingHandler(this.filter, this.sorter, this.renderer, this.disk, "output/folder")
 }
-func (this *ListRenderingHandlerSuite) handleAndFinalize() error {
-	this.handler.Handle(articleC)
+func (this *HomepageRenderingHandlerSuite) handleAndFinalize() error {
+	this.handler.Handle(articleA)
 	this.handler.Handle(articleB)
 	this.handler.Handle(articleB2)
-	this.handler.Handle(articleA)
+	this.handler.Handle(articleC)
 	return this.handler.Finalize()
 }
-func (this *ListRenderingHandlerSuite) TestNoArticles_NothingToRender() {
+func (this *HomepageRenderingHandlerSuite) TestNoArticles_NothingToRender() {
 	this.handler.Handle(articleC) // will be filtered out
 	err := this.handler.Finalize()
 	this.So(err, should.BeNil)
 	this.So(this.disk.Files, should.BeEmpty)
 }
-func (this *ListRenderingHandlerSuite) TestFileTemplateRenderedAndWrittenToDisk() {
+func (this *HomepageRenderingHandlerSuite) TestFileTemplateRenderedAndWrittenToDisk() {
 	this.renderer.result = "RENDERED"
 
 	err := this.handleAndFinalize()
@@ -141,7 +133,7 @@ func (this *ListRenderingHandlerSuite) TestFileTemplateRenderedAndWrittenToDisk(
 	file := this.disk.Files["output/folder/index.html"]
 	this.So(file.Content(), should.Equal, "RENDERED")
 }
-func (this *ListRenderingHandlerSuite) TestRenderErrorReturned() {
+func (this *HomepageRenderingHandlerSuite) TestRenderErrorReturned() {
 	renderErr := errors.New("boink")
 	this.renderer.err = renderErr
 
@@ -150,7 +142,7 @@ func (this *ListRenderingHandlerSuite) TestRenderErrorReturned() {
 	this.So(err, should.WrapError, renderErr)
 	this.So(this.disk.Files, should.BeEmpty)
 }
-func (this *ListRenderingHandlerSuite) TestMkdirAllErrorReturned() {
+func (this *HomepageRenderingHandlerSuite) TestMkdirAllErrorReturned() {
 	this.renderer.result = "RENDERED"
 	mkdirErr := errors.New("boink")
 	this.disk.ErrMkdirAll["output/folder"] = mkdirErr
@@ -160,7 +152,7 @@ func (this *ListRenderingHandlerSuite) TestMkdirAllErrorReturned() {
 	this.So(err, should.WrapError, mkdirErr)
 	this.So(this.disk.Files, should.BeEmpty)
 }
-func (this *ListRenderingHandlerSuite) TestWriteFileErrorReturned() {
+func (this *HomepageRenderingHandlerSuite) TestWriteFileErrorReturned() {
 	this.renderer.result = "RENDERED"
 	writeFileErr := errors.New("boink")
 	this.disk.ErrWriteFile["output/folder/index.html"] = writeFileErr

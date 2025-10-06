@@ -32,7 +32,7 @@ func (this *Pipeline) Run() (out chan contracts.Article) {
 	out = this.goListen(out, NewContentConversionHandler(NewGoldmarkMarkdownConverter()))
 	out = this.goListen(out, NewArticleRenderingHandler(this.disk, this.renderer, this.config.TargetRoot))
 	out = this.goListen(out, NewTopicPageRenderingHandler(this.disk, this.renderer, this.config.TargetRoot))
-	out = this.goListen(out, NewListRenderingHandler(
+	out = this.goListen(out, NewHomepageRenderingHandler(
 		filterAll,
 		sortByDateDescending,
 		this.renderer,

@@ -10,7 +10,8 @@ type Renderer interface {
 }
 
 const (
-	HomePageTemplateName = "listing.tmpl"
+	HomePageTemplateName = "home.tmpl"
+	ArchivesTemplateName = "archives.tmpl"
 	ArticleTemplateName  = "article.tmpl"
 	TopicsTemplateName   = "topics.tmpl"
 )
@@ -21,16 +22,13 @@ var (
 )
 
 type (
-	RenderedListPage struct {
-		// Deprecated
-		Title string
-
-		// Deprecated
-		Intro string
-
-		LatestArticle   RenderedArticleSummary
+	RenderedHomePage struct {
 		ProminentTopics []string
 		Pages           []RenderedArticleSummary
+	}
+
+	RenderedArchivesPage struct {
+		Pages []RenderedArticleSummary
 	}
 
 	RenderedArticle struct {
