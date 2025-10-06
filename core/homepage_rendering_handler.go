@@ -56,7 +56,7 @@ func (this *HomepageRenderingHandler) Finalize() error {
 		return nil
 	}
 	rendered, err := this.renderer.Render(contracts.RenderedHomePage{
-		ProminentTopics: this.topics.TopN(30),
+		ProminentTopics: slices.SortedStableFunc(slices.Values(this.topics.TopN(30)), cmp.Compare),
 		Pages:           slices.SortedStableFunc(slices.Values(this.pages), this.sorter)[:min(len(this.pages), 10)],
 	})
 	if err != nil {

@@ -11,7 +11,7 @@ import (
 	"github.com/mdw-tools/hugoinho/contracts"
 )
 
-func TestListRenderingHandlerSuite(t *testing.T) {
+func TestHomepageRenderingHandlerSuite(t *testing.T) {
 	suite.Run(&HomepageRenderingHandlerSuite{T: suite.New(t)}, suite.Options.UnitTests())
 }
 
@@ -74,7 +74,7 @@ func (this *HomepageRenderingHandlerSuite) sorter(i, j contracts.RenderedArticle
 }
 func (this *HomepageRenderingHandlerSuite) assertHandledArticlesRendered() {
 	this.So(this.renderer.rendered, should.Equal, contracts.RenderedHomePage{
-		ProminentTopics: []string{"topic-b", "topic-a"},
+		ProminentTopics: []string{"topic-a", "topic-b"},
 		Pages: []contracts.RenderedArticleSummary{
 			{
 				Slug:   "/a",

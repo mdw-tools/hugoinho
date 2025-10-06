@@ -2,6 +2,7 @@ package core
 
 import (
 	"bytes"
+	"errors"
 	"fmt"
 	"reflect"
 	"text/template"
@@ -17,23 +18,19 @@ func NewTemplateRenderer(templates *template.Template) *TemplateRenderer {
 	return &TemplateRenderer{templates: templates}
 }
 
-func (this *TemplateRenderer) Validate() error {
-	_, err := this.Render(contracts.RenderedHomePage{})
-	if err != nil {
-		return err
+func (this *TemplateRenderer) Validate() (result error) {
+	pages := []any{
+		contracts.RenderedHomePage{},
+		contracts.RenderedArchivesPage{},
+		contracts.RenderedTopicsListing{},
+		contracts.RenderedArticle{},
 	}
-
-	_, err = this.Render(contracts.RenderedTopicsListing{})
-	if err != nil {
-		return err
+	for _, page := range pages {
+		if _, err := this.Render(page); err != nil {
+			result = errors.Join(result, err)
+		}
 	}
-
-	_, err = this.Render(contracts.RenderedArticle{})
-	if err != nil {
-		return err
-	}
-
-	return nil
+	return result
 }
 
 func (this *TemplateRenderer) Render(v any) (string, error) {
@@ -41,6 +38,9 @@ func (this *TemplateRenderer) Render(v any) (string, error) {
 
 	case contracts.RenderedArticle:
 		return this.render(contracts.ArticleTemplateName, v)
+
+	case contracts.RenderedArchivesPage:
+		return this.render(contracts.ArchivesTemplateName, v)
 
 	case contracts.RenderedTopicsListing:
 		return this.render(contracts.TopicsTemplateName, v)

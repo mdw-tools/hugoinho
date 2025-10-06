@@ -39,6 +39,7 @@ func (this *PipelineRunnerFixture) Setup() {
 	this.file("content/c.md", ContentC)
 
 	this.file("templates/home.tmpl", TemplateHome)
+	this.file("templates/archives.tmpl", TemplateArchives)
 	this.file("templates/topics.tmpl", TemplateTopics)
 	this.file("templates/article.tmpl", TemplateArticle)
 }
@@ -114,22 +115,24 @@ func (this *PipelineRunnerFixture) TestValidConfigAndTemplates_PipelineRuns() {
 }
 
 func (this *PipelineRunnerFixture) assertRenderedDiskState() {
-	this.So(len(this.disk.Files), should.Equal, 14)
+	this.So(len(this.disk.Files), should.Equal, 17)
 	files, _ := json.MarshalIndent(this.disk.Files, "", "  ")
 	this.Println("FILES:", string(files))
 
 	this.assertFolder("rendered")
+	this.assertFolder("rendered/archives")
 	this.assertFolder("rendered/topics")
 	this.assertFolder("rendered/article-a")
 	this.assertFolder("rendered/article-b")
 
 	this.assertFile("rendered/index.html", RenderedListDescending)
+	this.assertFile("rendered/archives/index.html", RenderedListDescending)
 	this.assertFile("rendered/topics/index.html", RenderedTopics)
 	this.assertFile("rendered/article-a/index.html", RenderedArticleA)
 }
 
 func (this *PipelineRunnerFixture) assertOriginalDiskState() {
-	this.So(len(this.disk.Files), should.Equal, 6) // 3 articles, 3 templates
+	this.So(len(this.disk.Files), should.Equal, 7) // 3 articles, 4 templates
 }
 
 const (
@@ -171,6 +174,17 @@ This is the third article.
 `
 
 	TemplateHome = `
+{{ range .Pages }}
+Slug:   {{ .Slug }}
+Title:  {{ .Title }}
+Date:   {{ .Date.Format "2006-01-02" }}
+Intro:  {{ .Intro }}
+Topics: {{ range .Topics }}{{ . }} {{ end }}
+------------------------------------------------------------------
+{{ end }}
+`
+
+	TemplateArchives = `
 {{ range .Pages }}
 Slug:   {{ .Slug }}
 Title:  {{ .Title }}

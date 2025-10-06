@@ -32,6 +32,13 @@ func (this *Pipeline) Run() (out chan contracts.Article) {
 	out = this.goListen(out, NewContentConversionHandler(NewGoldmarkMarkdownConverter()))
 	out = this.goListen(out, NewArticleRenderingHandler(this.disk, this.renderer, this.config.TargetRoot))
 	out = this.goListen(out, NewTopicPageRenderingHandler(this.disk, this.renderer, this.config.TargetRoot))
+	out = this.goListen(out, NewArchivesRenderingHandler(
+		filterAll,
+		sortByDateDescending,
+		this.renderer,
+		this.disk,
+		this.config.TargetRoot,
+	))
 	out = this.goListen(out, NewHomepageRenderingHandler(
 		filterAll,
 		sortByDateDescending,
@@ -53,5 +60,5 @@ func (this *Pipeline) goListen(in chan contracts.Article, handler contracts.Hand
 }
 func filterAll(*contracts.Article) bool { return true }
 func sortByDateDescending(i, j contracts.RenderedArticleSummary) int {
-	return int(j.Date.UnixNano() - i.Date.UnixNano())
+	return -i.Date.Compare(j.Date)
 }

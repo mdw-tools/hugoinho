@@ -22,6 +22,7 @@ type TemplateRendererFixture struct {
 
 func (this *TemplateRendererFixture) Setup() {
 	this.parseTemplate(contracts.HomePageTemplateName)
+	this.parseTemplate(contracts.ArchivesTemplateName)
 	this.parseTemplate(contracts.ArticleTemplateName)
 	this.parseTemplate(contracts.TopicsTemplateName)
 	this.renderer = NewTemplateRenderer(this.templates)
@@ -40,6 +41,7 @@ func (this *TemplateRendererFixture) parseTemplate(name string) {
 
 func (this *TemplateRendererFixture) TestMissingHomePageTemplate_ValidateErr() {
 	this.templates = nil
+	this.parseTemplate(contracts.ArchivesTemplateName)
 	this.parseTemplate(contracts.ArticleTemplateName)
 	this.parseTemplate(contracts.TopicsTemplateName)
 	this.renderer = NewTemplateRenderer(this.templates)
@@ -48,6 +50,7 @@ func (this *TemplateRendererFixture) TestMissingHomePageTemplate_ValidateErr() {
 
 func (this *TemplateRendererFixture) TestMissingTopicsTemplate_ValidateErr() {
 	this.templates = nil
+	this.parseTemplate(contracts.ArchivesTemplateName)
 	this.parseTemplate(contracts.ArticleTemplateName)
 	this.parseTemplate(contracts.HomePageTemplateName)
 	this.renderer = NewTemplateRenderer(this.templates)
@@ -57,6 +60,16 @@ func (this *TemplateRendererFixture) TestMissingTopicsTemplate_ValidateErr() {
 func (this *TemplateRendererFixture) TestMissingArticleTemplate_ValidateErr() {
 	this.templates = nil
 	this.parseTemplate(contracts.HomePageTemplateName)
+	this.parseTemplate(contracts.ArchivesTemplateName)
+	this.parseTemplate(contracts.TopicsTemplateName)
+	this.renderer = NewTemplateRenderer(this.templates)
+	this.So(this.renderer.Validate(), should.NOT.BeNil)
+}
+
+func (this *TemplateRendererFixture) TestMissingArchivesTemplate_ValidateErr() {
+	this.templates = nil
+	this.parseTemplate(contracts.HomePageTemplateName)
+	this.parseTemplate(contracts.ArticleTemplateName)
 	this.parseTemplate(contracts.TopicsTemplateName)
 	this.renderer = NewTemplateRenderer(this.templates)
 	this.So(this.renderer.Validate(), should.NOT.BeNil)
@@ -66,6 +79,10 @@ func (this *TemplateRendererFixture) TestCanRenderTypesCorrespondingToTemplates(
 	home, homeErr := this.renderer.Render(contracts.RenderedHomePage{})
 	this.So(homeErr, should.BeNil)
 	this.So(home, should.Equal, contracts.HomePageTemplateName)
+
+	archives, archivesErr := this.renderer.Render(contracts.RenderedArchivesPage{})
+	this.So(archivesErr, should.BeNil)
+	this.So(archives, should.Equal, contracts.ArchivesTemplateName)
 
 	article, articleErr := this.renderer.Render(contracts.RenderedArticle{})
 	this.So(articleErr, should.BeNil)
