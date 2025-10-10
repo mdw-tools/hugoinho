@@ -173,10 +173,11 @@ type LeaderboardSuiteSuite struct {
 
 func (this *LeaderboardSuiteSuite) Test() {
 	l := leaderboard[string]{
-		"a": 42,
-		"b": 43,
-		"c": 44,
-		"d": 45,
+		"a":  42,
+		"b":  43,
+		"bb": 43,
+		"c":  44,
+		"d":  45,
 	}
 	this.So(l.TopN(3), should.Equal, []string{"d", "c", "b"})
 }
