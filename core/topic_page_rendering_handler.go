@@ -2,6 +2,7 @@ package core
 
 import (
 	"path/filepath"
+	"slices"
 	"sort"
 
 	"github.com/mdw-tools/hugoinho/contracts"
@@ -79,8 +80,6 @@ func (this *TopicPageRenderingHandler) sortTopics() (topics []string) {
 		}
 		topics = append(topics, topic)
 	}
-	sort.Slice(topics, func(i, j int) bool {
-		return topics[i] < topics[j]
-	})
+	slices.Sort(topics)
 	return topics
 }
