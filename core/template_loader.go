@@ -1,6 +1,7 @@
 package core
 
 import (
+	"path/filepath"
 	"strings"
 	"text/template"
 
@@ -26,13 +27,14 @@ func (this *TemplateLoader) Load() (templates *template.Template, err error) {
 		if entry.Error != nil {
 			return nil, StackTraceError(entry.Error)
 		}
-		if templates == nil {
-			templates = template.New(entry.Name())
-		} else {
-			templates = templates.New(entry.Name())
-		}
 		if !strings.HasSuffix(entry.Name(), ".tmpl") {
 			continue
+		}
+		templateName := this.templateName(entry)
+		if templates == nil {
+			templates = template.New(templateName)
+		} else {
+			templates = templates.New(templateName)
 		}
 		all, err := this.disk.ReadFile(entry.Path)
 		if err != nil {
@@ -44,4 +46,14 @@ func (this *TemplateLoader) Load() (templates *template.Template, err error) {
 		}
 	}
 	return templates, nil
+}
+
+// templateName computes the template name from an entry's path.
+// Top-level files use their filename (e.g., "home.tmpl").
+// Subdirectory files use their relative path (e.g., "subdir/home.tmpl").
+func (this *TemplateLoader) templateName(entry contracts.FileSystemEntry) string {
+	// Error is ignored because Walk only yields entries under the folder,
+	// so filepath.Rel is guaranteed to succeed.
+	rel, _ := filepath.Rel(this.folder, entry.Path)
+	return rel
 }

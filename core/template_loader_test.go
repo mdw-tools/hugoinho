@@ -81,6 +81,19 @@ func (this *TemplateLoaderFixture) TestReadFileErr() {
 	this.So(templates, should.BeNil)
 }
 
+func (this *TemplateLoaderFixture) TestSubdirectoryTemplatesNamespaced() {
+	_ = this.disk.MkdirAll("templates/components", 0755)
+	_ = this.disk.WriteFile("templates/components/header.tmpl", []byte("<header>COMPONENT</header>"), 0644)
+	_ = this.disk.WriteFile("templates/components/footer.tmpl", []byte("<footer>COMPONENT</footer>"), 0644)
+
+	templates, err := this.loader.Load()
+
+	this.So(err, should.BeNil)
+	this.So(templates.Lookup("home.tmpl"), should.NOT.BeNil)
+	this.So(templates.Lookup("components/header.tmpl"), should.NOT.BeNil)
+	this.So(templates.Lookup("components/footer.tmpl"), should.NOT.BeNil)
+}
+
 const (
 	ValidHomePageTemplate    = ``
 	ValidTopicsPageTemplate  = ``
