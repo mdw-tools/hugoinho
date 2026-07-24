@@ -83,6 +83,17 @@ func (this *PipelineRunnerFixture) assertFile(path, expectedContent string) {
 	this.So(actual, should.Equal, expected)
 }
 
+func (this *PipelineRunnerFixture) TestPathLoadErrorPropagatesThroughPipeline() {
+	// A walk error on one of the content files should surface as a pipeline error.
+
+	this.arg("-base-path", "/")
+	this.disk.ErrWalkFunc["content/a.md"] = errors.New("walk error on a.md")
+
+	errs := this.buildRunner().Run()
+
+	this.So(errs, should.Equal, 1)
+}
+
 func (this *PipelineRunnerFixture) TestBadConfigPreventsProcessing_Error() {
 	this.arg("-invalid", "=l2k3j")
 	errs := this.buildRunner().Run()

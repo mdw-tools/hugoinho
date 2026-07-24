@@ -50,7 +50,14 @@ func (this *Pipeline) Run() (out chan contracts.Article) {
 }
 func (this *Pipeline) goLoad() (out chan contracts.Article) {
 	out = make(chan contracts.Article)
-	go NewPathLoader(this.disk, this.config.ContentRoot, out).Start()
+	loader := NewPathLoader(this.disk, this.config.ContentRoot, out)
+	go func() {
+		loader.Start()
+		if err := loader.Finalize(); err != nil {
+			out <- contracts.Article{Error: err}
+		}
+		close(out)
+	}()
 	return out
 }
 func (this *Pipeline) goListen(in chan contracts.Article, handler contracts.Handler) (out chan contracts.Article) {

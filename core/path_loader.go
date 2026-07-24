@@ -26,12 +26,14 @@ func NewPathLoader(
 }
 
 func (this *PathLoader) Start() {
-	defer close(this.output)
 	files := this.files.Walk(this.root)
 	for file := range files {
+		if this.err != nil {
+			continue
+		}
 		if file.Error != nil {
 			this.err = StackTraceError(file.Error)
-			return
+			continue
 		}
 		if file.IsDir() {
 			continue
