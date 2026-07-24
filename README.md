@@ -6,7 +6,7 @@ Yet another static site generator--a [tiny](https://en.wiktionary.org/wiki/-inho
 ## Disclaimer:
 
 1. I wrote this to generate static html for my own website. I sometimes modify its behavior to suit my purposes. There is no intention to support general-purpose use. See the license for additional disclaimers.
-2. Topics/tags are only rendered once 3 separate articles reference them.
+2. Topics/tags are only rendered once 2 separate articles reference them.
 3. Rather than use this repo outright, why not create your own fork, or create your own static site generator from scratch? It's really not that difficult, and it's a fun, relatively small-sized project.
 
 ## Installation
