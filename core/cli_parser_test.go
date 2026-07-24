@@ -92,3 +92,60 @@ func (this *CLIParserFixture) TestBogusValue() {
 	this.So(err, should.WrapError, ErrInvalidConfig)
 	this.So(config, should.Equal, contracts.Config{})
 }
+
+func (this *CLIParserFixture) TestPathTraversalInTarget() {
+	this.args = []string{"-target", "../../etc"}
+	config, err := this.Parse()
+	this.So(err, should.WrapError, ErrInvalidConfig)
+	this.So(config, should.Equal, contracts.Config{})
+	this.So(err.Error(), should.Contain, "path traversal")
+}
+
+func (this *CLIParserFixture) TestPathTraversalInContent() {
+	this.args = []string{"-content", "../../secret"}
+	config, err := this.Parse()
+	this.So(err, should.WrapError, ErrInvalidConfig)
+	this.So(config, should.Equal, contracts.Config{})
+	this.So(err.Error(), should.Contain, "path traversal")
+}
+
+func (this *CLIParserFixture) TestPathTraversalInTemplates() {
+	this.args = []string{"-templates", "../../etc/templates"}
+	config, err := this.Parse()
+	this.So(err, should.WrapError, ErrInvalidConfig)
+	this.So(config, should.Equal, contracts.Config{})
+	this.So(err.Error(), should.Contain, "path traversal")
+}
+
+func (this *CLIParserFixture) TestValidNestedPath() {
+	this.args = []string{"-content", "content/posts", "-target", "rendered/html"}
+	config, err := this.Parse()
+	this.So(err, should.BeNil)
+	this.So(config.ContentRoot, should.Equal, "content/posts")
+	this.So(config.TargetRoot, should.Equal, "rendered/html")
+}
+
+func (this *CLIParserFixture) TestPathTraversalWindowsStyle() {
+	this.args = []string{"-target", "..\\etc"}
+	config, err := this.Parse()
+	this.So(err, should.WrapError, ErrInvalidConfig)
+	this.So(config, should.Equal, contracts.Config{})
+	this.So(err.Error(), should.Contain, "path traversal")
+}
+
+func (this *CLIParserFixture) TestHasPathTraversalClean() {
+	this.So(hasPathTraversal("content/posts"), should.BeFalse)
+	this.So(hasPathTraversal("templates"), should.BeFalse)
+	this.So(hasPathTraversal("rendered/html"), should.BeFalse)
+}
+
+func (this *CLIParserFixture) TestHasPathTraversalTraversal() {
+	this.So(hasPathTraversal("../../etc"), should.BeTrue)
+	this.So(hasPathTraversal("..\\secret"), should.BeTrue)
+	this.So(hasPathTraversal("a/../b"), should.BeTrue)
+}
+
+func (this *CLIParserFixture) TestSanitizeForError() {
+	this.So(sanitizeForError("../../etc"), should.Equal, "<traversal>/<traversal>/etc")
+	this.So(sanitizeForError("normal/path"), should.Equal, "normal/path")
+}

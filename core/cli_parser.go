@@ -5,6 +5,7 @@ import (
 	"errors"
 	"flag"
 	"fmt"
+	"path/filepath"
 	"strings"
 
 	"github.com/mdw-tools/hugoinho/contracts"
@@ -79,7 +80,35 @@ func validateConfig(config contracts.Config) error {
 	if config.TargetRoot == "" {
 		return errors.New("target directory is required")
 	}
+	if hasPathTraversal(config.TemplateDir) {
+		return errors.New("template directory contains path traversal: " + sanitizeForError(config.TemplateDir))
+	}
+	if hasPathTraversal(config.ContentRoot) {
+		return errors.New("content directory contains path traversal: " + sanitizeForError(config.ContentRoot))
+	}
+	if hasPathTraversal(config.TargetRoot) {
+		return errors.New("target directory contains path traversal: " + sanitizeForError(config.TargetRoot))
+	}
 	return nil
+}
+
+// hasPathTraversal checks whether a path contains ".." components that could escape the intended directory.
+func hasPathTraversal(path string) bool {
+	// Clean the path to resolve any . or .. components, then compare.
+	cleaned := filepath.Clean(path)
+	if strings.Contains(cleaned, "..") {
+		return true
+	}
+	// Also check for raw ".." substrings that Clean might not catch on all platforms.
+	if strings.Contains(path, "../") || strings.Contains(path, "..\\") {
+		return true
+	}
+	return false
+}
+
+// sanitizeForError returns the path for error messages with ".." components obscured.
+func sanitizeForError(path string) string {
+	return strings.ReplaceAll(path, "..", "<traversal>")
 }
 
 var ErrInvalidConfig = errors.New("invalid config")
