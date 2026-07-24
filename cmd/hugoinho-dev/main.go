@@ -5,6 +5,7 @@ import (
 	"net/http"
 	"os"
 	"path/filepath"
+	"sync"
 	"time"
 
 	"github.com/mdw-tools/hugoinho/core"
@@ -22,7 +23,12 @@ func main() {
 		logger.Fatal(err)
 	}
 
+	var lock sync.Mutex
+
 	http.HandleFunc("/", func(response http.ResponseWriter, request *http.Request) {
+		lock.Lock()
+		defer lock.Unlock()
+
 		err := os.RemoveAll(config.TargetRoot)
 		if err != nil {
 			http.Error(response, "Failed to remove target directory.", http.StatusInternalServerError)
