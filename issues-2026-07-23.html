@@ -1,0 +1,275 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>hugoinho — Issues Catalog (2026-07-23)</title>
+  <style>
+    :root {
+      --bg: #ffffff;
+      --fg: #1f2328;
+      --border: #d0d7de;
+      --critical: #d73a49;
+      --high: #d97700;
+      --medium: #eab308;
+      --low: #0969da;
+      --table-stripe: #f6f8fa;
+      --table-header: #e8ebf0;
+    }
+    @media (prefers-color-scheme: dark) {
+      :root {
+        --bg: #0d1117;
+        --fg: #c9d1d9;
+        --border: #30363d;
+        --critical: #f85149;
+        --high: #f0883e;
+        --medium: #e3b341;
+        --low: #58a6ff;
+        --table-stripe: #161b22;
+        --table-header: #1c2128;
+      }
+    }
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, Arial, sans-serif;
+      background: var(--bg);
+      color: var(--fg);
+      padding: 2rem;
+      line-height: 1.5;
+    }
+    h1 {
+      font-size: 1.5rem;
+      margin-bottom: 0.25rem;
+      color: var(--fg);
+    }
+    h2 {
+      font-size: 1.1rem;
+      color: var(--fg);
+      opacity: 0.7;
+      margin-bottom: 1.5rem;
+      font-weight: normal;
+    }
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 0.875rem;
+    }
+    th {
+      text-align: left;
+      padding: 0.6rem 0.75rem;
+      background: var(--table-header);
+      border-bottom: 2px solid var(--border);
+      color: var(--fg);
+      white-space: nowrap;
+      position: sticky;
+      top: 0;
+    }
+    td {
+      padding: 0.55rem 0.75rem;
+      border-bottom: 1px solid var(--border);
+      vertical-align: top;
+    }
+    tr:nth-child(even) td {
+      background: var(--table-stripe);
+    }
+    .severity {
+      display: inline-block;
+      padding: 0.15rem 0.5rem;
+      border-radius: 9999px;
+      font-weight: 600;
+      font-size: 0.75rem;
+      text-transform: uppercase;
+      letter-spacing: 0.04em;
+      white-space: nowrap;
+    }
+    .critical { background: var(--critical); color: #fff; }
+    .high     { background: var(--high);     color: #fff; }
+    .medium   { background: var(--medium);   color: #000; }
+    .low      { background: var(--low);      color: #fff; }
+    code {
+      background: var(--table-header);
+      padding: 0.1rem 0.35rem;
+      border-radius: 4px;
+      font-family: "SFMono-Regular", Consolas, "Liberation Mono", Menlo, monospace;
+      font-size: 0.8em;
+    }
+    a { color: var(--low); text-decoration: none; }
+    a:hover { text-decoration: underline; }
+  </style>
+</head>
+<body>
+
+  <h1>hugoinho — Issues Catalog</h1>
+  <h2>Generated 2026-07-23 &middot; github.com/mdw-tools/hugoinho</h2>
+
+  <table>
+    <thead>
+      <tr>
+        <th>#</th>
+        <th>File</th>
+        <th>Severity</th>
+        <th>Resolution</th>
+        <th>Category</th>
+        <th>Issue</th>
+      </tr>
+    </thead>
+    <tbody>
+
+      <tr>
+        <td>1</td>
+        <td><code>topic_page_rendering_handler.go</code></td>
+        <td><span class="severity high">High</span></td>
+        <td><span class="severity low" style="background: #238636;">Resolved</span></td>
+        <td>Bug (doc mismatch)</td>
+        <td>README previously said topics need <strong>3</strong> articles to render, but code filters at <code>len == 1</code> (i.e., 2+). Documentation has been corrected to match the code.</td>
+      </tr>
+
+      <tr>
+        <td>2</td>
+        <td><code>path_loader.go</code> / <code>pipeline.go</code></td>
+        <td><span class="severity high">High</span></td>
+        <td><span class="severity low" style="background: #238636;">Resolved</span></td>
+        <td>Bug</td>
+        <td><strong>Errors during path loading are silently lost.</strong> <code>PathLoader.Start()</code> stores errors in <code>this.err</code> and <code>Finalize()</code> returns them, but <code>Finalize()</code> is never called (PathLoader is not wrapped by <code>goListen()</code>). Bad file paths are never surfaced.</td>
+      </tr>
+
+      <tr>
+        <td>3</td>
+        <td><code>hugoinho-dev/main.go</code></td>
+        <td><span class="severity high">High</span></td>
+        <td><span class="severity low" style="background: #238636;">Resolved</span></td>
+        <td>Bug (race condition)</td>
+        <td><strong>Concurrent requests race on output directory.</strong> <code>os.RemoveAll(config.TargetRoot)</code> + <code>runner.Run()</code> happen per-request with no locking. Two simultaneous requests will corrupt/erase each other's output. <em>Fixed: added <code>sync.Mutex</code> to serialize build requests.</em></td>
+      </tr>
+
+      <tr>
+        <td>4</td>
+        <td><code>listener.go</code></td>
+        <td><span class="severity medium">Medium</span></td>
+        <td><span class="severity low" style="background: #6e7781;">Wontfix</span></td>
+        <td>Design</td>
+        <td><strong>No pipeline short-circuit on error.</strong> When a handler sets <code>article.Error</code>, the article still flows through ALL remaining handlers. This is wasteful and can produce unexpected output (e.g., rendering a broken article).</td>
+      </tr>
+
+      <tr>
+        <td>5</td>
+        <td><code>stack_trace_error.go</code></td>
+        <td><span class="severity medium">Medium</span></td>
+        <td><span class="severity low" style="background: #6e7781;">Wontfix</span></td>
+        <td>Code quality</td>
+        <td><strong>Every error is wrapped with a full stack trace.</strong> This makes logs extremely verbose and hard to read. Applied indiscriminately to all 30+ error paths. Consider using it only for unexpected/internal errors.</td>
+      </tr>
+
+      <tr>
+        <td>6</td>
+        <td><code>template_loader.go</code></td>
+        <td><span class="severity medium">Medium</span></td>
+        <td><span class="severity low" style="background: #238636;">Resolved</span></td>
+        <td>Bug</td>
+        <td><strong>Template name collision in subdirectories.</strong> <code>entry.Name()</code> returns just the filename (e.g., <code>home.tmpl</code>). If two subdirectories both contain <code>home.tmpl</code>, the second silently overwrites the first. No path-based namespacing. <em>Fixed: <code>templateName()</code> now uses <code>filepath.Rel(this.folder, entry.Path)</code> to namespace templates by their relative path. Top-level files keep their filename; subdirectory files are namespaced (e.g., <code>components/header.tmpl</code>).</em></td>
+      </tr>
+
+      <tr>
+        <td>7</td>
+        <td><code>cli_parser.go</code></td>
+        <td><span class="severity medium">Medium</span></td>
+        <td><span class="severity low" style="background: #238636;">Resolved</span></td>
+        <td>Security</td>
+        <td><strong>No path traversal validation.</strong> Paths like <code>../../etc</code> or <code>../secret</code> were accepted without sanitization. A malicious config could write outside the target directory. <em>Fixed: <code>hasPathTraversal()</code> now rejects any path containing <code>..</code> components in <code>TemplateDir</code>, <code>ContentRoot</code>, or <code>TargetRoot</code>. Error messages sanitize <code>..</code> to <code>&lt;traversal&gt;</code> to avoid leaking directory structure.</em></td>
+      </tr>
+
+      <tr>
+        <td>8</td>
+        <td><code>stack_trace_error.go</code></td>
+        <td><span class="severity low">Low</span></td>
+        <td><span class="severity low" style="background: #238636;">Resolved</span></td>
+        <td>Code quality</td>
+        <td><strong>Stack trace on user-input errors.</strong> Wrapping errors like &ldquo;blank metadata title&rdquo; or &ldquo;duplicate slug&rdquo; with stack traces is excessive noise. <em>Fixed: removed <code>StackTraceError()</code> from all 43 call sites across 11 files. Deleted <code>stack_trace_error.go</code>. All errors now use plain <code>fmt.Errorf()</code> wrapping without stack traces.</em></td>
+      </tr>
+
+      <tr>
+        <td>9</td>
+        <td><code>listener.go</code></td>
+        <td><span class="severity low">Low</span></td>
+        <td><span class="severity low" style="background: #6e7781;">Wontfix</span></td>
+        <td>Design</td>
+        <td><strong>Handler result discarded when article has prior error.</strong> When <code>article.Error != nil</code>, <code>handler.Handle()</code> is skipped entirely. This means a later handler can&rsquo;t recover or clean up from an earlier error.</td>
+      </tr>
+
+      <tr>
+        <td>10</td>
+        <td><code>metadata_parser.go</code></td>
+        <td><span class="severity low">Low</span></td>
+        <td><span class="severity low" style="background: #238636;">Resolved</span></td>
+        <td>Code quality</td>
+        <td><strong>Inconsistent error wrapping.</strong> Some errors used <code>StackTraceError()</code>, others used raw <code>fmt.Errorf()</code>. <em>Fixed: unified all error handling to use plain <code>fmt.Errorf()</code> wrapping. <code>StackTraceError()</code> removed entirely. All 15 error paths across the codebase now follow the same pattern.</em></td>
+      </tr>
+
+      <tr>
+        <td>11</td>
+        <td><code>topic_page_rendering_handler.go</code></td>
+        <td><span class="severity low">Low</span></td>
+        <td><span class="severity low" style="background: #238636;">Resolved</span></td>
+        <td>Design</td>
+        <td><strong>Topics collected per-article but never deduplicated across pipeline.</strong> If an article has duplicate topics in its front-matter, <code>parseTopics</code> checks for duplicates, but the <code>topics</code> map in <code>TopicPageRenderingHandler</code> could accumulate duplicate entries. <em>Fixed: <code>Handle()</code> now uses a <code>seen</code> map to skip duplicate topics within a single article, preventing the same article summary from being appended multiple times under the same topic.</em></td>
+      </tr>
+
+      <tr>
+        <td>12</td>
+        <td><code>GoldmarkMarkdownConverter</code></td>
+        <td><span class="severity low">Low</span></td>
+        <td><span class="severity low" style="background: #238636;">Resolved</span></td>
+        <td>Code quality</td>
+        <td><strong>Buffer not reset on error.</strong> Issue resolved by calling <code>this.buffer.Reset()</code> at the start of every <code>Convert()</code> call. Note: goldmark never returns an error for any input, so this is purely defensive programming — but the fix is correct and harmless.</td>
+      </tr>
+
+      <tr>
+        <td>13</td>
+        <td>Throughout</td>
+        <td><span class="severity low">Low</span></td>
+        <td><span class="severity low" style="background: #6e7781;">Wontfix</span></td>
+        <td>Style</td>
+        <td><strong><code>this</code> receiver naming.</strong> The codebase consistently uses <code>this</code> as the receiver name instead of Go convention (<code>p</code>, <code>m</code>, or the struct initial). Makes the code look non-idiomatic to Go developers.</td>
+      </tr>
+
+      <tr>
+        <td>14</td>
+        <td><code>metadata_parser.go</code></td>
+        <td><span class="severity low">Low</span></td>
+        <td><span class="severity low" style="background: #6e7781;">Wontfix</span></td>
+        <td>UX</td>
+        <td><strong><code>draft: &quot;&quot;</code> returns error rather than defaulting to <code>false</code>.</strong> Missing <code>draft</code> field could reasonably default to <code>false</code> instead of producing an error.</td>
+      </tr>
+
+      <tr>
+        <td>15</td>
+        <td><code>pipeline.go</code></td>
+        <td><span class="severity low">Low</span></td>
+        <td><span class="severity low" style="background: #6e7781;">Wontfix</span></td>
+        <td>Design</td>
+        <td><strong>No concurrency control.</strong> Each pipeline stage spawns a goroutine with no bounds. If the pipeline is extended with many stages, goroutine count grows linearly with pipeline length.</td>
+      </tr>
+
+      <tr>
+        <td>16</td>
+        <td><code>hugoinho-dev/main.go</code></td>
+        <td><span class="severity low">Low</span></td>
+        <td><span class="severity low" style="background: #6e7781;">Wontfix</span></td>
+        <td>Performance</td>
+        <td><strong>Full regeneration per HTTP request.</strong> The dev server regenerates the entire site on every page load (<code>os.RemoveAll</code> + full pipeline). Should cache or only regenerate changed files.</td>
+      </tr>
+
+      <tr>
+        <td>17</td>
+        <td><code>pipeline.go</code></td>
+        <td><span class="severity low">Low</span></td>
+        <td><span class="severity low" style="background: #6e7781;">Wontfix</span></td>
+        <td>Edge case</td>
+        <td><strong>No <code>.gitignore</code> or hidden file filtering.</strong> Any <code>.md</code> file in the content directory is processed, including hidden files (<code>.hidden.md</code>) or editor swap files.</td>
+      </tr>
+
+    </tbody>
+  </table>
+
+</body>
+</html>
