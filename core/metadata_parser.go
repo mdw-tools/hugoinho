@@ -69,7 +69,7 @@ func (this *MetadataParser) Parse() error {
 
 func (this *MetadataParser) parseTitle(value string) error {
 	if this.parsedTitle {
-		return StackTraceError(errDuplicateMetadataTitle)
+		return errDuplicateMetadataTitle
 	}
 	if value == "" {
 		return errBlankMetadataTitle
@@ -80,7 +80,7 @@ func (this *MetadataParser) parseTitle(value string) error {
 }
 func (this *MetadataParser) parseIntro(value string) error {
 	if this.parsedIntro {
-		return StackTraceError(errDuplicateMetadataIntro)
+		return errDuplicateMetadataIntro
 	}
 	this.parsed.Intro = value
 	this.parsedIntro = true
@@ -88,17 +88,17 @@ func (this *MetadataParser) parseIntro(value string) error {
 }
 func (this *MetadataParser) parseSlug(value string) error {
 	if this.parsedSlug {
-		return StackTraceError(errDuplicateMetadataSlug)
+		return errDuplicateMetadataSlug
 	}
 	if value == "" {
-		return StackTraceError(errBlankMetadataSlug)
+		return errBlankMetadataSlug
 	}
 	if strings.ToLower(value) != value {
-		return StackTraceError(errInvalidMetadataSlug)
+		return errInvalidMetadataSlug
 	}
 	parsed, _ := url.Parse(value)
 	if parsed.Path != parsed.EscapedPath() {
-		return StackTraceError(fmt.Errorf("%w: [%s]", errInvalidMetadataSlug, value))
+		return fmt.Errorf("%w: [%s]", errInvalidMetadataSlug, value)
 	}
 	this.parsed.Slug = value
 	this.parsedSlug = true
@@ -106,7 +106,7 @@ func (this *MetadataParser) parseSlug(value string) error {
 }
 func (this *MetadataParser) parseDraft(value string) error {
 	if this.parsedDraft {
-		return StackTraceError(errDuplicateMetadataDraft)
+		return errDuplicateMetadataDraft
 	}
 
 	switch value {
@@ -117,22 +117,22 @@ func (this *MetadataParser) parseDraft(value string) error {
 		this.parsed.Draft = false
 		this.parsedDraft = true
 	case "":
-		return StackTraceError(errBlankMetadataDraft)
+		return errBlankMetadataDraft
 	default:
-		return StackTraceError(fmt.Errorf("%w: [%s]", errInvalidMetadataDraft, value))
+		return fmt.Errorf("%w: [%s]", errInvalidMetadataDraft, value)
 	}
 	return nil
 }
 func (this *MetadataParser) parseDate(value string) error {
 	if this.parsedDate {
-		return StackTraceError(errDuplicateMetadataDate)
+		return errDuplicateMetadataDate
 	}
 	if value == "" {
-		return StackTraceError(errBlankMetadataDate)
+		return errBlankMetadataDate
 	}
 	parsed, err := time.Parse("2006-01-02", value)
 	if err != nil {
-		return StackTraceError(fmt.Errorf("%w with value: [%s] err: %v", errInvalidMetadataDate, value, err))
+		return fmt.Errorf("%w with value: [%s] err: %v", errInvalidMetadataDate, value, err)
 	}
 	this.parsed.Date = parsed
 	this.parsedDate = true
@@ -140,18 +140,18 @@ func (this *MetadataParser) parseDate(value string) error {
 }
 func (this *MetadataParser) parseTopics(value string) error {
 	if this.parsedTopics {
-		return StackTraceError(errDuplicateMetadataTopics)
+		return errDuplicateMetadataTopics
 	}
 	unique := make(map[string]struct{})
 	topics := strings.Fields(value)
 	for _, topic := range topics {
 		if !isValidTopic(topic) {
-			return StackTraceError(fmt.Errorf("%w: [%s]", errInvalidMetadataTopics, value))
+			return fmt.Errorf("%w: [%s]", errInvalidMetadataTopics, value)
 		}
 		unique[topic] = struct{}{}
 	}
 	if len(unique) != len(topics) {
-		return StackTraceError(fmt.Errorf("%w: [%s] (repeated values)", errInvalidMetadataTopics, value))
+		return fmt.Errorf("%w: [%s] (repeated values)", errInvalidMetadataTopics, value)
 	}
 	this.parsed.Topics = topics
 	this.parsedTopics = true

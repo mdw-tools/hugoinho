@@ -52,18 +52,18 @@ func (this *ArchivesRenderingHandler) Finalize() error {
 		Pages: slices.SortedStableFunc(slices.Values(this.pages), this.sorter),
 	})
 	if err != nil {
-		return StackTraceError(err)
+		return err
 	}
 
 	folder := filepath.Join(this.output, "archives")
 	err = this.disk.MkdirAll(folder, 0755)
 	if err != nil {
-		return StackTraceError(err)
+		return err
 	}
 
 	err = this.disk.WriteFile(filepath.Join(folder, "index.html"), []byte(rendered), 0644)
 	if err != nil {
-		return StackTraceError(err)
+		return err
 	}
 
 	return nil

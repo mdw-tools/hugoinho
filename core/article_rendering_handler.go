@@ -41,20 +41,20 @@ func (this *ArticleRenderingHandler) Handle(article *contracts.Article) {
 
 	rendered, err := this.renderer.Render(data)
 	if err != nil {
-		article.Error = StackTraceError(err)
+		article.Error = err
 		return
 	}
 
 	folder := filepath.Join(this.output, article.Metadata.Slug)
 	err = this.disk.MkdirAll(folder, 0755)
 	if err != nil {
-		article.Error = StackTraceError(err)
+		article.Error = err
 		return
 	}
 
 	err = this.disk.WriteFile(filepath.Join(folder, "index.html"), []byte(rendered), 0644)
 	if err != nil {
-		article.Error = StackTraceError(err)
+		article.Error = err
 		return
 	}
 }

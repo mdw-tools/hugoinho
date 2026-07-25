@@ -20,7 +20,7 @@ func (this *ContentConversionHandler) Handle(article *contracts.Article) {
 	_, original := divide(article.Source.Data, contracts.METADATA_CONTENT_DIVIDER)
 	converted, err := this.inner.Convert(original)
 	if err != nil {
-		article.Error = StackTraceError(err)
+		article.Error = err
 		return
 	}
 

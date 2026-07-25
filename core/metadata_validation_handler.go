@@ -16,23 +16,23 @@ func NewMetadataValidationHandler() *MetadataValidationHandler {
 
 func (this *MetadataValidationHandler) Handle(article *contracts.Article) {
 	if article.Metadata.Title == "" {
-		article.Error = fmt.Errorf("[%s] %w", article.Source.Path, StackTraceError(errBlankMetadataTitle))
+		article.Error = fmt.Errorf("[%s] %w", article.Source.Path, errBlankMetadataTitle)
 		return
 	}
 
 	if article.Metadata.Slug == "" {
-		article.Error = fmt.Errorf("[%s] %w", article.Source.Path, StackTraceError(errBlankMetadataSlug))
+		article.Error = fmt.Errorf("[%s] %w", article.Source.Path, errBlankMetadataSlug)
 		return
 	}
 
 	if article.Metadata.Date.IsZero() {
-		article.Error = fmt.Errorf("[%s] %w", article.Source.Path, StackTraceError(errBlankMetadataDate))
+		article.Error = fmt.Errorf("[%s] %w", article.Source.Path, errBlankMetadataDate)
 		return
 	}
 
 	_, found := this.slugs[article.Metadata.Slug]
 	if found {
-		article.Error = fmt.Errorf("[%s] %w", article.Source.Path, StackTraceError(errRepeatedMetadataSlug))
+		article.Error = fmt.Errorf("[%s] %w", article.Source.Path, errRepeatedMetadataSlug)
 		return
 	}
 

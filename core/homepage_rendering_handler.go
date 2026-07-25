@@ -60,17 +60,17 @@ func (this *HomepageRenderingHandler) Finalize() error {
 		Pages:           slices.SortedStableFunc(slices.Values(this.pages), this.sorter)[:min(len(this.pages), 10)],
 	})
 	if err != nil {
-		return StackTraceError(err)
+		return err
 	}
 
 	err = this.disk.MkdirAll(this.output, 0755)
 	if err != nil {
-		return StackTraceError(err)
+		return err
 	}
 
 	err = this.disk.WriteFile(filepath.Join(this.output, "index.html"), []byte(rendered), 0644)
 	if err != nil {
-		return StackTraceError(err)
+		return err
 	}
 
 	return nil

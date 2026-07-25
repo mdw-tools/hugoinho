@@ -25,7 +25,7 @@ func NewTemplateLoader(disk TemplateLoaderFileSystem, folder string) *TemplateLo
 func (this *TemplateLoader) Load() (templates *template.Template, err error) {
 	for entry := range this.disk.Walk(this.folder) {
 		if entry.Error != nil {
-			return nil, StackTraceError(entry.Error)
+			return nil, entry.Error
 		}
 		if !strings.HasSuffix(entry.Name(), ".tmpl") {
 			continue
@@ -38,11 +38,11 @@ func (this *TemplateLoader) Load() (templates *template.Template, err error) {
 		}
 		all, err := this.disk.ReadFile(entry.Path)
 		if err != nil {
-			return nil, StackTraceError(err)
+			return nil, err
 		}
 		templates, err = templates.Parse(string(all))
 		if err != nil {
-			return nil, StackTraceError(err)
+			return nil, err
 		}
 	}
 	return templates, nil

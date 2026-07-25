@@ -42,18 +42,18 @@ func (this *TopicPageRenderingHandler) Handle(article *contracts.Article) {
 func (this *TopicPageRenderingHandler) Finalize() error {
 	rendered, err := this.renderer.Render(this.prepareRendering())
 	if err != nil {
-		return StackTraceError(err)
+		return err
 	}
 
 	folder := filepath.Join(this.output, "topics")
 	err = this.disk.MkdirAll(folder, 0755)
 	if err != nil {
-		return StackTraceError(err)
+		return err
 	}
 
 	err = this.disk.WriteFile(filepath.Join(folder, "index.html"), []byte(rendered), 0644)
 	if err != nil {
-		return StackTraceError(err)
+		return err
 	}
 
 	return nil

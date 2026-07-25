@@ -32,7 +32,7 @@ func (this *PathLoader) Start() {
 			continue
 		}
 		if file.Error != nil {
-			this.err = StackTraceError(file.Error)
+			this.err = file.Error
 			continue
 		}
 		if file.IsDir() {

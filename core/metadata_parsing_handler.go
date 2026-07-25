@@ -15,13 +15,13 @@ func NewMetadataParsingHandler() *MetadataParsingHandler {
 
 func (this *MetadataParsingHandler) Handle(article *contracts.Article) {
 	if strings.TrimSpace(article.Source.Data) == "" {
-		article.Error = StackTraceError(errMissingMetadata)
+		article.Error = errMissingMetadata
 		return
 	}
 
 	metadata, _ := divide(article.Source.Data, contracts.METADATA_CONTENT_DIVIDER)
 	if len(metadata) == 0 {
-		article.Error = StackTraceError(errMissingMetadataDivider)
+		article.Error = errMissingMetadataDivider
 		return
 	}
 
