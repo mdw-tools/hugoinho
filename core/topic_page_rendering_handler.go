@@ -29,7 +29,12 @@ func NewTopicPageRenderingHandler(
 }
 
 func (this *TopicPageRenderingHandler) Handle(article *contracts.Article) {
+	seen := make(map[string]bool)
 	for _, topic := range article.Metadata.Topics {
+		if seen[topic] {
+			continue
+		}
+		seen[topic] = true
 		this.topics[topic] = append(this.topics[topic], contracts.RenderedArticleSummary{
 			Slug:  article.Metadata.Slug,
 			Title: article.Metadata.Title,

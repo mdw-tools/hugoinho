@@ -145,3 +145,50 @@ func (this *TopicPageRenderingHandlerFixture) TestWriteFileErrorReturned() {
 	this.So(err, should.WrapError, writeFileErr)
 	this.So(this.disk.Files, should.NOT.Contain, "output/folder/topics/index.html")
 }
+
+func (this *TopicPageRenderingHandlerFixture) TestDuplicateTopicsDeduplicated() {
+	this.handler = NewTopicPageRenderingHandler(this.disk, this.renderer, "output/folder")
+	this.handler.Handle(&contracts.Article{
+		Metadata: contracts.ArticleMetadata{
+			Slug:   "/slug1",
+			Title:  "title1",
+			Intro:  "intro1",
+			Date:   Date(2020, 1, 1),
+			Topics: []string{"a", "a", "a"},
+		},
+	})
+	this.handler.Handle(&contracts.Article{
+		Metadata: contracts.ArticleMetadata{
+			Slug:   "/slug2",
+			Title:  "title2",
+			Intro:  "intro2",
+			Date:   Date(2020, 2, 2),
+			Topics: []string{"a", "b", "a"},
+		},
+	})
+
+	err := this.handler.Finalize()
+
+	this.So(err, should.BeNil)
+	this.So(this.renderer.rendered, should.Equal, contracts.RenderedTopicsListing{
+		Topics: []contracts.RenderedTopicListing{
+			{
+				Topic: "a",
+				Articles: []contracts.RenderedArticleSummary{
+					{
+						Slug:  "/slug2",
+						Title: "title2",
+						Intro: "intro2",
+						Date:  Date(2020, 2, 2),
+					},
+					{
+						Slug:  "/slug1",
+						Title: "title1",
+						Intro: "intro1",
+						Date:  Date(2020, 1, 1),
+					},
+				},
+			},
+		},
+	})
+}
