@@ -4,6 +4,7 @@ import (
 	"errors"
 	"fmt"
 	"net/url"
+	"path"
 	"strings"
 	"time"
 
@@ -94,6 +95,21 @@ func (this *MetadataParser) parseSlug(value string) error {
 		return errBlankMetadataSlug
 	}
 	if strings.ToLower(value) != value {
+		return errInvalidMetadataSlug
+	}
+	if value == "/" {
+		return errInvalidMetadataSlug
+	}
+	if value == "/archives" || strings.HasPrefix(value, "/archives/") {
+		return errInvalidMetadataSlug
+	}
+	if value == "/topics" || strings.HasPrefix(value, "/topics/") {
+		return errInvalidMetadataSlug
+	}
+	if path.Clean(value) != strings.TrimSuffix(value, "/") {
+		return errInvalidMetadataSlug
+	}
+	if strings.HasPrefix(value, "../") {
 		return errInvalidMetadataSlug
 	}
 	parsed, _ := url.Parse(value)

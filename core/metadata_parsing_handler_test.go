@@ -104,6 +104,55 @@ func (this *MetadataParserFixture) TestInvalidCasingSlug_Err() {
 
 	this.So(this.article.Error, should.WrapError, errInvalidMetadataSlug)
 }
+func (this *MetadataParserFixture) TestSlugWithLeadingParentDirectory_Err() {
+	this.appendMetadataWithContent("slug: ../outside-target")
+
+	this.parser.Handle(this.article)
+
+	this.So(this.article.Error, should.WrapError, errInvalidMetadataSlug)
+}
+func (this *MetadataParserFixture) TestSlugWithParentDirectorySegment_Err() {
+	this.appendMetadataWithContent("slug: /articles/../outside-target/")
+
+	this.parser.Handle(this.article)
+
+	this.So(this.article.Error, should.WrapError, errInvalidMetadataSlug)
+}
+func (this *MetadataParserFixture) TestSlugCollidingWithGeneratedTopicsPage_Err() {
+	this.appendMetadataWithContent("slug: /topics/")
+
+	this.parser.Handle(this.article)
+
+	this.So(this.article.Error, should.WrapError, errInvalidMetadataSlug)
+}
+func (this *MetadataParserFixture) TestSlugCollidingWithGeneratedTopicsPageWithoutTrailingSlash_Err() {
+	this.appendMetadataWithContent("slug: /topics")
+
+	this.parser.Handle(this.article)
+
+	this.So(this.article.Error, should.WrapError, errInvalidMetadataSlug)
+}
+func (this *MetadataParserFixture) TestSlugCollidingWithGeneratedArchivesPage_Err() {
+	this.appendMetadataWithContent("slug: /archives/")
+
+	this.parser.Handle(this.article)
+
+	this.So(this.article.Error, should.WrapError, errInvalidMetadataSlug)
+}
+func (this *MetadataParserFixture) TestSlugCollidingWithGeneratedArchivesPageWithoutTrailingSlash_Err() {
+	this.appendMetadataWithContent("slug: /archives")
+
+	this.parser.Handle(this.article)
+
+	this.So(this.article.Error, should.WrapError, errInvalidMetadataSlug)
+}
+func (this *MetadataParserFixture) TestSlugCollidingWithGeneratedHomePage_Err() {
+	this.appendMetadataWithContent("slug: /")
+
+	this.parser.Handle(this.article)
+
+	this.So(this.article.Error, should.WrapError, errInvalidMetadataSlug)
+}
 func (this *MetadataParserFixture) TestBlankSlug_Err() {
 	this.appendMetadataWithContent("slug: ")
 
