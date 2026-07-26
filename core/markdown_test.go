@@ -32,6 +32,16 @@ func (this *GoldmarkMarkdownConverterFixture) Test() {
 	this.So(output2, should.Equal, EXPECTED_HTML_OUTPUT)
 }
 
+func (this *GoldmarkMarkdownConverterFixture) TestRawHTMLIsRenderedForTrustedArticleContent() {
+	output, err := this.converter.Convert(`<style>.callout { color: rebeccapurple; }</style>
+
+<span class="callout">Styled article content</span>`)
+
+	this.So(err, should.BeNil)
+	this.So(output, should.Contain, `<style>.callout { color: rebeccapurple; }</style>`)
+	this.So(output, should.Contain, `<span class="callout">Styled article content</span>`)
+}
+
 const MARKDOWN_INPUT = `
 # H1
 

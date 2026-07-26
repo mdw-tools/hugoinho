@@ -94,6 +94,22 @@ func (this *TemplateLoaderFixture) TestSubdirectoryTemplatesNamespaced() {
 	this.So(templates.Lookup("components/footer.tmpl"), should.NOT.BeNil)
 }
 
+func (this *TemplateLoaderFixture) TestLoadedTemplatesEscapeArticleMetadata() {
+	_ = this.disk.WriteFile("templates/"+contracts.ArticleTemplateName, []byte(
+		`<title>{{ .Title }}</title><meta name="description" content="{{ .Intro }}"><a href="{{ .Slug }}">Article</a>`), 0644)
+
+	templates, err := this.loader.Load()
+	this.So(err, should.BeNil)
+	rendered, err := NewTemplateRenderer(templates).Render(contracts.RenderedArticle{
+		Title: `</title><script>alert("pwned")</script>`,
+		Intro: `" onmouseover="alert(1)`,
+		Slug:  `javascript:alert("pwned")`,
+	})
+
+	this.So(err, should.BeNil)
+	this.So(rendered, should.Equal, `<title>&lt;/title&gt;&lt;script&gt;alert(&#34;pwned&#34;)&lt;/script&gt;</title><meta name="description" content="&#34; onmouseover=&#34;alert(1)"><a href="#ZgotmplZ">Article</a>`)
+}
+
 const (
 	ValidHomePageTemplate    = ``
 	ValidTopicsPageTemplate  = ``

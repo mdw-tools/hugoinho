@@ -9,6 +9,12 @@ Yet another static site generator--a [tiny](https://en.wiktionary.org/wiki/-inho
 2. Topics/tags are only rendered once 2 separate articles reference them.
 3. Rather than use this repo outright, why not create your own fork, or create your own static site generator from scratch? It's really not that difficult, and it's a fun, relatively small-sized project.
 
+## Content trust model
+
+Article Markdown and templates are trusted publishing input. Article Markdown intentionally permits raw HTML, including inline styles, so do not build a site from untrusted or externally submitted content without adding an HTML sanitization policy first. A trusted author can therefore publish executable markup and unsafe links.
+
+Metadata such as titles, introductions, slugs, and topics is data rather than trusted markup. Templates must contextually escape it; only the Markdown conversion result should be deliberately rendered as HTML.
+
 ## Installation
 
 1. Clone this repo

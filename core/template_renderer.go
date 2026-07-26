@@ -4,8 +4,8 @@ import (
 	"bytes"
 	"errors"
 	"fmt"
+	"html/template"
 	"reflect"
-	"text/template"
 
 	"github.com/mdw-tools/hugoinho/contracts"
 )
@@ -34,10 +34,13 @@ func (this *TemplateRenderer) Validate() (result error) {
 }
 
 func (this *TemplateRenderer) Render(v any) (string, error) {
-	switch v.(type) {
+	switch instance := v.(type) {
 
 	case contracts.RenderedArticle:
-		return this.render(contracts.ArticleTemplateName, v)
+		return this.render(contracts.ArticleTemplateName, renderedArticle{
+			RenderedArticle: instance,
+			Content:         template.HTML(instance.Content),
+		})
 
 	case contracts.RenderedArchivesPage:
 		return this.render(contracts.ArchivesTemplateName, v)
@@ -68,4 +71,11 @@ func (this *TemplateRenderer) render(name string, data any) (string, error) {
 		)
 	}
 	return buffer.String(), nil
+}
+
+// renderedArticle is an internal representation of the article with the Content
+// (emitted from Markdown converter) marked as safe HTML.
+type renderedArticle struct {
+	contracts.RenderedArticle
+	Content template.HTML
 }

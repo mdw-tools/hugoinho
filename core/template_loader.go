@@ -1,9 +1,9 @@
 package core
 
 import (
+	"html/template"
 	"path/filepath"
 	"strings"
-	"text/template"
 
 	"github.com/mdw-tools/hugoinho/contracts"
 )

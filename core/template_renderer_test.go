@@ -1,8 +1,8 @@
 package core
 
 import (
+	"html/template"
 	"testing"
-	"text/template"
 
 	"github.com/mdw-go/testing/v2/should"
 	"github.com/mdw-go/testing/v2/suite"
