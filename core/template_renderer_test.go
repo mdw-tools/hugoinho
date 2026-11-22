@@ -93,6 +93,27 @@ func (this *TemplateRendererFixture) TestCanRenderTypesCorrespondingToTemplates(
 	this.So(topics, should.Equal, contracts.TopicsTemplateName)
 }
 
+func (this *TemplateRendererFixture) TestFeedTemplateIsOptional() {
+	rendered, err := this.renderer.Render(contracts.RenderedFeed{})
+	this.So(err, should.WrapError, contracts.ErrMissingTemplate)
+	this.So(rendered, should.BeEmpty)
+}
+
+func (this *TemplateRendererFixture) TestFeedRenderedWhenTemplateDefined_ContentEscaped() {
+	feed, err := template.New(contracts.FeedTemplateName).Parse(
+		`<item><title>{{ (index .Articles 0).Title }}</title><content:encoded>{{ (index .Articles 0).Content }}</content:encoded></item>`)
+	this.So(err, should.BeNil)
+	this.renderer = NewTemplateRenderer(feed)
+
+	rendered, err := this.renderer.Render(contracts.RenderedFeed{
+		Articles: []contracts.RenderedArticle{{Title: "A & B", Content: "<p>Hi</p>"}},
+	})
+
+	this.So(err, should.BeNil)
+	this.So(rendered, should.Equal,
+		`<item><title>A &amp; B</title><content:encoded>&lt;p&gt;Hi&lt;/p&gt;</content:encoded></item>`)
+}
+
 func (this *TemplateRendererFixture) TestCannotRenderUnknownTypes() {
 	home, homeErr := this.renderer.Render(42)
 	this.So(homeErr, should.WrapError, contracts.ErrUnsupportedRenderingType)

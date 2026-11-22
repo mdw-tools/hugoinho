@@ -51,6 +51,12 @@ func (this *TemplateRenderer) Render(v any) (string, error) {
 	case contracts.RenderedHomePage:
 		return this.render(contracts.HomePageTemplateName, v)
 
+	case contracts.RenderedFeed:
+		if this.templates == nil || this.templates.Lookup(contracts.FeedTemplateName) == nil {
+			return "", fmt.Errorf("%w: [%s]", contracts.ErrMissingTemplate, contracts.FeedTemplateName)
+		}
+		return this.render(contracts.FeedTemplateName, v)
+
 	default:
 		return "", fmt.Errorf(
 			"%w [%v]: %v",

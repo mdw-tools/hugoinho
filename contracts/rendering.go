@@ -14,11 +14,15 @@ const (
 	ArchivesTemplateName = "archives.tmpl"
 	ArticleTemplateName  = "article.tmpl"
 	TopicsTemplateName   = "topics.tmpl"
+
+	// FeedTemplateName is optional; the feed is only rendered when a site defines it.
+	FeedTemplateName = "feed.tmpl"
 )
 
 var (
 	ErrUnsupportedRenderingType = errors.New("unsupported rendering type")
 	ErrRenderingFailure         = errors.New("failed to render template")
+	ErrMissingTemplate          = errors.New("missing template")
 )
 
 type (
@@ -57,5 +61,12 @@ type (
 	RenderedTopicListing struct {
 		Topic    string
 		Articles []RenderedArticleSummary
+	}
+
+	// RenderedFeed holds every article (newest first) for a syndication feed (RSS, Atom, etc.).
+	// Unlike RenderedArticle (as rendered by the article template), the Content is not marked
+	// as safe HTML, so templates emit it escaped, which is what XML feeds require.
+	RenderedFeed struct {
+		Articles []RenderedArticle
 	}
 )

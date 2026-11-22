@@ -46,6 +46,7 @@ func (this *Pipeline) Run() (out chan contracts.Article) {
 		this.disk,
 		this.config.TargetRoot,
 	))
+	out = this.goListen(out, NewFeedRenderingHandler(this.renderer, this.disk, this.config.TargetRoot))
 	return out
 }
 func (this *Pipeline) goLoad() (out chan contracts.Article) {
